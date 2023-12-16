@@ -47,7 +47,7 @@ const password = req.body.password;
 try {
 const user = await Model.findOne({username});
  if (!user){
-    res.status(400).json({message: "User not found"});
+    return res.status(401).json({message: "User not found"});
  }
 
  const passwordMatch = await bcrypt.compare(password, user.password);
