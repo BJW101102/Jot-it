@@ -4,10 +4,11 @@
 import React, { useState } from "react";
 import '../CSS/Login.css';
 import axios from 'axios';
+import swal from 'sweetalert';
+
 
 function SignUp() {
 
-    var message = null;
 
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
@@ -25,14 +26,21 @@ function SignUp() {
         console.log("Clicked");
         try {
             const resp = await axios.post(url, { username: username, password: password }, { withCredentials: true });
-            //console.log(resp.data);
-            if(resp.status === 200){
-            window.location.href = 'http://localhost:3000/dashboard';
+            if (resp.status === 200) {
+
+                swal("Awesome!", "Great to have you", "success").then(() => {
+                    window.location.href = 'http://localhost:3000/dashboard';
+                });
             }
         }
         catch (error) {
             console.log(error.response);
         }
+
+    }
+
+    const handleBackToLogin = async () => {
+        window.location.href = 'http://localhost:3000/dashboard';
 
     }
 
@@ -65,8 +73,8 @@ function SignUp() {
                 <p>Password: {password}</p>
 
                 <br></br>
-                <button id="login-button" type="submit" onClick={handleSubmit} className="btn btn-primary" style={{background:"red"}}>Submit</button>
-                {message}
+                <button id="login-button" type="submit" onClick={handleSubmit} style={{ marginRight: "5vh" }} className="btn btn-outline-success">Submit</button>
+                <button id="login-button" type="button" onClick={handleBackToLogin} style={{ marginRight: "5vh" }} className="btn btn-outline-success">Back to Login</button>                
             </form>
         </div>
     );

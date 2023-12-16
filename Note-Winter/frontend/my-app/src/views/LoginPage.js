@@ -58,6 +58,10 @@ function Login() {
         }
     }
 
+    const handleSignUp = async () =>{
+        window.location.href = 'http://localhost:3000/signup';
+    }
+
     return (
         <div className="Login" style={{ textAlign: "center" }}>
             <h1>Login</h1>
@@ -80,12 +84,13 @@ function Login() {
                         onChange={handlePassword}
                     />
                 </div>
-                <p>Username: {username}</p>
+                {/* <p>Username: {username}</p>
                 <br></br>
-                <p>Password: {password}</p>
+                <p>Password: {password}</p> */}
 
                 <br></br>
-                <button id="login-button" type="submit" onClick={handleSubmit} className="btn btn-primary">Submit</button>
+                <button id="login-button" type="submit" onClick={handleSubmit}   style={{ marginRight: "5vh" }} className="btn btn-outline-success">Login</button>
+                <button id="login-button" type="button" onClick={handleSignUp}   style={{ marginRight: "5vh" }} className="btn btn-outline-success">Signup</button>
                 {message}
             </form>
         </div>

@@ -39,12 +39,12 @@ input {
 
 #login-button {
     width: 25%;
-    padding: 10px;
-    background-color: #4caf50;
-    color: #fff;
-    border: none;
-    border-radius: 4px;
+    /* padding: 10px; */
+    /* background-color: #4caf50; */
+    /* color: #fff; */
+    /* border: none; */
+    /* border-radius: 4px; */
     cursor: pointer;
-    font-size: 16px;
+    /* font-size: 16px; */
 }
 
