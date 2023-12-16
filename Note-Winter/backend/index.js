@@ -1,4 +1,6 @@
-// index.js
+//@author: Brandon Walton
+//index {Backend}
+
 require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');

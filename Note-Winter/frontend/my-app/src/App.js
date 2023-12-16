@@ -1,3 +1,6 @@
+//@author: Brandon Walton
+//App 
+
 import React from 'react';
 import './CSS/Dashboard.css';
 import Dashboard from './views/Dashboard';

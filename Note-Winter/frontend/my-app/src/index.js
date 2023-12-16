@@ -1,3 +1,6 @@
+//@author: Brandon Walton
+//index {Frontend} 
+
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './CSS/index.css';

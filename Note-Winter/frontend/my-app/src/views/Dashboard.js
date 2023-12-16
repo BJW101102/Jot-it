@@ -1,4 +1,6 @@
-// Dashboard.js
+//@author: Brandon Walton
+//Dashboard
+
 import React, { useState, useEffect } from 'react';
 import pencil from '../images/pencil-button.png';
 import eraser from '../images/eraser-button.png';
@@ -10,9 +12,6 @@ function Dashboard() {
 
 
   const [userData, setUserData] = useState(null);
-
-  //Need Explaination for this
- 
 
   const fetchUserData = async () =>{
     try{

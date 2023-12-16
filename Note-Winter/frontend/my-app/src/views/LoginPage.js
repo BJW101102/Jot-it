@@ -1,3 +1,6 @@
+//@author: Brandon Walton
+//LoginPage
+
 import React, { useState } from "react";
 import '../CSS/Login.css';
 import axios from 'axios';
