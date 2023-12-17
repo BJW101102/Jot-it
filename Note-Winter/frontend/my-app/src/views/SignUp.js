@@ -9,7 +9,6 @@ import swal from 'sweetalert';
 
 function SignUp() {
 
-
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const url = 'http://localhost:5500/api/register'
@@ -34,13 +33,21 @@ function SignUp() {
             }
         }
         catch (error) {
-            console.log(error.response);
+            const status = error.response.status
+            if (status === 409){
+                swal("Oops!", "User name has already been taken", "error");
+
+                setUsername('');
+                setPassword('');
+            }
+            console.log("Error Status: ", error.response.status);
+            console.log("Error Message: ", error.response.data.message);
         }
 
     }
 
     const handleBackToLogin = async () => {
-        window.location.href = 'http://localhost:3000/dashboard';
+        window.location.href = 'http://localhost:3000/login';
 
     }
 
@@ -71,7 +78,6 @@ function SignUp() {
                 <p>Username: {username}</p>
                 <br></br>
                 <p>Password: {password}</p>
-
                 <br></br>
                 <button id="login-button" type="submit" onClick={handleSubmit} style={{ marginRight: "5vh" }} className="btn btn-outline-success">Submit</button>
                 <button id="login-button" type="button" onClick={handleBackToLogin} style={{ marginRight: "5vh" }} className="btn btn-outline-success">Back to Login</button>                
