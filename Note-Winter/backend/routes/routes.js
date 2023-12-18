@@ -43,10 +43,10 @@ router.post('/register', async (req, res) => {
 router.post('/login', async (req, res) => {
     const username = req.body.username;
     const password = req.body.password;
-    
+
 
     try {
-        const user = await Model.findOne({username, password});
+        const user = await Model.findOne({ username, password });
         if (!user) {
             return res.status(401).json({ message: "User not found" });
         }
@@ -113,7 +113,7 @@ router.post('/notes', async (req, res) => {
             return res.status(400).json({ message: 'Internal server error', error: error.message });
         }
         const header = req.body.header.toString(); // Convert to string if necessary
-        const body = req.body.body.toString(); 
+        const body = req.body.body.toString();
         userInfo.notes.push({
             header: header,
             body: body,
@@ -131,11 +131,11 @@ router.post('/notes', async (req, res) => {
 router.get('/usernotes', async (req, res) => {
     try {
         const user = req.session.user;
-        if(!user){
+        if (!user) {
             return res.status(500).json({ message: 'Internal server error', error: error.message });
         }
         const userInfo = await Model.findById(user._id);
-        if(!userInfo){
+        if (!userInfo) {
             return res.status(401).json({ message: 'User not found' });
         }
         console.log("User working with is: ", userInfo.notes);
@@ -152,11 +152,35 @@ router.get('/usernotes', async (req, res) => {
         // console.log("Header: ", notesHeader);
         // console.log("Body: ", notesBody);
 
-        return res.status(200).json({header: notesHeader, body: notesBody });
+        return res.status(200).json({ header: notesHeader, body: notesBody });
 
     }
     catch (error) {
         res.status(500).json({ message: 'Internal server error', error: error.message });
 
+    }
+})
+
+//Delete route for user Notes
+router.delete('/deletenotes', async (req, res) => {
+    try {
+        const user = req.session.user;
+        if (!user) {
+            console.log("No session");
+            return res.status(500).json({ message: 'Internal server error', error: error.message });
+
+        }
+        const userInfo = await Model.findById(user._id);
+        if (!userInfo) {
+            return res.status(500).json({ message: 'Internal server error', error: error.message });
+        }
+
+        const index = req.body.index;
+        userInfo.notes.splice(index, 1);
+        await userInfo.save();
+        res.status(200).json({ message: 'Successfuly Deleted notes' });
+    }
+    catch (error) {
+        return res.status(500).json({ message: 'Internal server error', error: error.message });
     }
 })

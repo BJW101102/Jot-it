@@ -13,6 +13,14 @@
   align-items: center;
 }
 
+.card-header{
+  font-weight: bold;
+}
+#note-text{
+  font-weight:normal;
+  /* color: purple; */
+}
+
 button {
   border: none;
   background-color: transparent;
@@ -32,3 +40,5 @@ button {
   position: relative;
   left: 6%;
 }
+
+

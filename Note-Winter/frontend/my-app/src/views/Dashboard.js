@@ -5,8 +5,27 @@ import React, { useState, useEffect } from 'react';
 import pencil from '../images/pencil-button.png';
 import eraser from '../images/eraser-button.png';
 import axios from 'axios';
+import color from '../images/color-palette.png';
 const url = 'http://localhost:5500/api/user';
 const noteurl = 'http://localhost:5500/api/notes';
+
+
+class Color {
+  constructor(header, body) {
+    this.header = header;
+    this.body = body;
+  }
+}
+const red = new Color("#f6a0a1", "#fea7a7bc");
+const pink = new Color("#f7bbf9", "#ffc2ffbc")
+const orange = new Color("#f6d4a1", "#fedba7bc");
+const green = new Color("#b2f7a1", "#bafea7bc");
+const blue = new Color("#bce9f9", "#c4f0ffbc");
+const purple = new Color("#bda0f8", "#c5a7febc");
+const gray = new Color("#f1f2f3", "#f8f9fa");
+const colorPicker = new Array(red, pink, orange, green, blue, purple, gray);
+var colorIndex = -1;
+
 
 
 function Dashboard() {
@@ -17,7 +36,7 @@ function Dashboard() {
   const [headerList, setHeaderList] = useState([]);
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
-
+  
 
   const fetchUserData = async () => {
     try {
@@ -51,7 +70,6 @@ function Dashboard() {
     }
   };
 
-
   useEffect(() => {
     console.log("Called ");
     fetchUserData();
@@ -79,11 +97,49 @@ function Dashboard() {
 
   };
 
-  const handleDelete = (index) => {
-    const updateList = [...noteList];
-    updateList.splice(index, 1);
-    setNoteList(updateList);
+  const handleDelete = async (noteToDelete) => {
+
+    const indexToDelete = noteList.indexOf(noteToDelete);
+    const updatedNoteList = [...noteList];
+    const updatedHeaderList =[...headerList];
+    updatedNoteList.splice(indexToDelete, 1);
+    updatedHeaderList.splice(indexToDelete, 1);
+
+    setNoteList(updatedNoteList);
+    setHeaderList(updatedHeaderList);
+  
+    try {
+      const resp = await axios.delete('http://localhost:5500/api/deletenotes', { index: indexToDelete, withCredentials: true });
+      console.log(resp.data);
+    }
+    catch (error) {
+      console.log(error.response.data);
+    }
   };
+
+const handleColorChange = async (index) =>{
+console.log("called");
+if (colorIndex === 6){
+  colorIndex = 0;
+}
+else {
+  colorIndex++;
+
+}
+const cardHeader = document.getElementsByClassName("card-header");
+const cardBody = document.getElementsByClassName("card-body");
+
+  cardHeader[index].style.setProperty('background-color', colorPicker[colorIndex].header, 'important');
+  cardBody[index].style.setProperty('background-color', colorPicker[colorIndex].body, 'important');
+
+
+  // cardHeader[i].style.backgroundColor = colorPicker[colorIndex].header;
+  // cardBody[i].style.backgroundColor = colorPicker[colorIndex].body;
+
+
+};
+
+
 
   return (
     <div className='fluid-container'>
@@ -102,7 +158,8 @@ function Dashboard() {
             style={{ height: "5vh", width: "100vh" }}
           />
           <textarea
-            value={note} onChange={handleNoteChange}
+            value={note}
+            onChange={handleNoteChange}
             placeholder="Leave a note here"
             id="floatingTextarea"
             style={{ height: "10vh", width: "100vh", }}>
@@ -120,23 +177,31 @@ function Dashboard() {
           noteList.length === 0 ? (<h1>Insert a Note</h1>) : (
             <div className="note-container">
               {
-                noteList.map((note, i) => (
-                  <div key={i} className="card bg-light mb-3">
+            
+            noteList.map((note, i) => (
+                  <div key={i} className="card bg-light mb-3" style={{width:"45vh",}}>
                     <div className="card-header">{headerList[i]}</div>
                     <div className="card-body">
                       <p className="card-text">
-                        <input type="checkbox" className="form-check-input" style={{ position: "relative", left: "-15px" }} />
-                        <label className="form-check-label" htmlFor="exampleCheck1">{note}</label>
+                        {note.split('\n').map((lineNote, j) => (
+                          <React.Fragment key={j}>
+                            {j > 0 && <br />}
+                            {<input type="checkbox" className="form-check-input" style={{ position: "relative", left: "-15px" }} />}
+                            {<label id ="note-text" className="form-check-label">{lineNote}</label>}
+                          </React.Fragment>
+                        ))}
                       </p>
-                      <button onClick={() => handleDelete(i)} style={{ position: "relative", left: "-100px" }}>
-                        <img src={eraser} alt="Download" style={{ width: '25px', height: '25px' }} />
+                      <button onClick={() => handleDelete(note)} style={{ position: "relative", left: "-110px" }}>
+                        <img src={eraser} alt="Download" style={{ width: '25px', height: '25px'}} />
+                      </button>
+                      <button onClick={() =>handleColorChange(i)}>
+                      <img src={color} alt="Download" style={{ width: '25px',position: "relative", left: '-100px' }} />
                       </button>
                     </div>
                   </div>
                 ))}
             </div>
           )
-
         )}
       </div>
     </div>
