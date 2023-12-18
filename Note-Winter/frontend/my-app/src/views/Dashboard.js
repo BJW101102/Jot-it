@@ -6,27 +6,21 @@ import pencil from '../images/pencil-button.png';
 import eraser from '../images/eraser-button.png';
 import axios from 'axios';
 import color from '../images/color-palette.png';
-const url = 'http://localhost:5500/api/user';
-const noteurl = 'http://localhost:5500/api/notes';
 
+const api = axios.create({
+  baseURL: 'http://localhost:5500/api/',
+  withCredentials: true,  // Assuming you want to include credentials with each request
+});
 
-class Color {
-  constructor(header, body) {
-    this.header = header;
-    this.body = body;
-  }
-}
-const red = new Color("#f6a0a1", "#fea7a7bc");
-const pink = new Color("#f7bbf9", "#ffc2ffbc")
-const orange = new Color("#f6d4a1", "#fedba7bc");
-const green = new Color("#b2f7a1", "#bafea7bc");
-const blue = new Color("#bce9f9", "#c4f0ffbc");
-const purple = new Color("#bda0f8", "#c5a7febc");
-const gray = new Color("#f1f2f3", "#f8f9fa");
-const colorPicker = new Array(red, pink, orange, green, blue, purple, gray);
-var colorIndex = -1;
-
-
+const colorPicker = [
+  { header: "#f6a0a1", body: "#fea7a7bc" }, //Red
+  { header: "#f7bbf9", body: "#ffc2ffbc" }, //Pink  
+  { header: "#f6d4a1", body: "#fedba7bc" },  //Orange
+  { header: "#b2f7a1", body: "#bafea7bc" },  //Green
+  { header: "#bce9f9", body: "#c4f0ffbc" }, //Blue  
+  { header: "#bda0f8", body: "#c5a7febc" }, //Purple
+  { header: "#f1f2f3", body: "#f8f9fa" } //Gray
+];
 
 function Dashboard() {
 
@@ -36,11 +30,12 @@ function Dashboard() {
   const [headerList, setHeaderList] = useState([]);
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
-  
 
+
+//Begin: Fetching User Infromation
   const fetchUserData = async () => {
     try {
-      const resp = await axios.get(url, { withCredentials: true });
+      const resp = await api.get('user', { withCredentials: true });
       // console.log("Response is: ", resp);
       setUserData(resp.data);
     }
@@ -51,7 +46,7 @@ function Dashboard() {
 
   const fetchUserNotes = async () => {
     try {
-      const resp = await axios.get('http://localhost:5500/api/usernotes', { withCredentials: true });
+      const resp = await api.get('usernotes', { withCredentials: true });
       console.log(resp);
       const notesData = resp.data;
       const headerArray = notesData.header;
@@ -75,7 +70,10 @@ function Dashboard() {
     fetchUserData();
     fetchUserNotes();
   }, []);
+//End: Fetching User Infromation
 
+
+//Begin: Handlers
   const handleNoteChange = (event) => {
     setNote(() => event.target.value);
   };
@@ -88,7 +86,7 @@ function Dashboard() {
     setNoteList([...noteList, note]);
     setHeaderList([...headerList, header]);
     try {
-      const resp = await axios.post(noteurl, { header: header, body: note }, { withCredentials: true });
+      const resp = await api.post('notes', { header: header, body: note }, { withCredentials: true });
       console.log(resp.data);
     }
     catch (error) {
@@ -100,46 +98,44 @@ function Dashboard() {
   const handleDelete = async (noteToDelete) => {
 
     const indexToDelete = noteList.indexOf(noteToDelete);
-    const updatedNoteList = [...noteList];
-    const updatedHeaderList =[...headerList];
-    updatedNoteList.splice(indexToDelete, 1);
-    updatedHeaderList.splice(indexToDelete, 1);
 
-    setNoteList(updatedNoteList);
-    setHeaderList(updatedHeaderList);
-  
     try {
-      const resp = await axios.delete('http://localhost:5500/api/deletenotes', { index: indexToDelete, withCredentials: true });
+      const resp = await api.delete('deletenotes', {
+        data: { index: indexToDelete },
+        withCredentials: true
+      });
+      const updatedNoteList = [...noteList];
+      const updatedHeaderList = [...headerList];
+      updatedNoteList.splice(indexToDelete, 1);
+      updatedHeaderList.splice(indexToDelete, 1);
+
+      setNoteList(updatedNoteList);
+      setHeaderList(updatedHeaderList);
+
       console.log(resp.data);
     }
     catch (error) {
       console.log(error.response.data);
     }
   };
+  var colorIndex = -1;
+  const handleColorChange = async (index) => {
+    console.log("called");
+    if (colorIndex === 6) {
+      colorIndex = 0;
+    }
+    else {
+      colorIndex++;
 
-const handleColorChange = async (index) =>{
-console.log("called");
-if (colorIndex === 6){
-  colorIndex = 0;
-}
-else {
-  colorIndex++;
+    }
+    const cardHeader = document.getElementsByClassName("card-header");
+    const cardBody = document.getElementsByClassName("card-body");
 
-}
-const cardHeader = document.getElementsByClassName("card-header");
-const cardBody = document.getElementsByClassName("card-body");
+    cardHeader[index].style.setProperty('background-color', colorPicker[colorIndex].header, 'important');
+    cardBody[index].style.setProperty('background-color', colorPicker[colorIndex].body, 'important');
 
-  cardHeader[index].style.setProperty('background-color', colorPicker[colorIndex].header, 'important');
-  cardBody[index].style.setProperty('background-color', colorPicker[colorIndex].body, 'important');
-
-
-  // cardHeader[i].style.backgroundColor = colorPicker[colorIndex].header;
-  // cardBody[i].style.backgroundColor = colorPicker[colorIndex].body;
-
-
-};
-
-
+  };
+//End: Handlers
 
   return (
     <div className='fluid-container'>
@@ -177,9 +173,9 @@ const cardBody = document.getElementsByClassName("card-body");
           noteList.length === 0 ? (<h1>Insert a Note</h1>) : (
             <div className="note-container">
               {
-            
-            noteList.map((note, i) => (
-                  <div key={i} className="card bg-light mb-3" style={{width:"45vh",}}>
+
+                noteList.map((note, i) => (
+                  <div key={i} className="card bg-light mb-3" style={{ width: "45vh", }}>
                     <div className="card-header">{headerList[i]}</div>
                     <div className="card-body">
                       <p className="card-text">
@@ -187,15 +183,15 @@ const cardBody = document.getElementsByClassName("card-body");
                           <React.Fragment key={j}>
                             {j > 0 && <br />}
                             {<input type="checkbox" className="form-check-input" style={{ position: "relative", left: "-15px" }} />}
-                            {<label id ="note-text" className="form-check-label">{lineNote}</label>}
+                            {<label id="note-text" className="form-check-label">{lineNote}</label>}
                           </React.Fragment>
                         ))}
                       </p>
                       <button onClick={() => handleDelete(note)} style={{ position: "relative", left: "-110px" }}>
-                        <img src={eraser} alt="Download" style={{ width: '25px', height: '25px'}} />
+                        <img src={eraser} alt="Download" style={{ width: '25px', height: '25px' }} />
                       </button>
-                      <button onClick={() =>handleColorChange(i)}>
-                      <img src={color} alt="Download" style={{ width: '25px',position: "relative", left: '-100px' }} />
+                      <button onClick={() => handleColorChange(i)}>
+                        <img src={color} alt="Download" style={{ width: '25px', position: "relative", left: '-100px' }} />
                       </button>
                     </div>
                   </div>

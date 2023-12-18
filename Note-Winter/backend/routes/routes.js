@@ -176,6 +176,7 @@ router.delete('/deletenotes', async (req, res) => {
         }
 
         const index = req.body.index;
+        console.log("Deleting this element-index: ", index);
         userInfo.notes.splice(index, 1);
         await userInfo.save();
         res.status(200).json({ message: 'Successfuly Deleted notes' });

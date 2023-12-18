@@ -75,10 +75,10 @@ function SignUp() {
                         onChange={handlePassword}
                     />
                 </div>
-                <p>Username: {username}</p>
+                {/* <p>Username: {username}</p>
                 <br></br>
                 <p>Password: {password}</p>
-                <br></br>
+                <br></br> */}
                 <button id="login-button" type="submit" onClick={handleSubmit} style={{ marginRight: "5vh" }} className="btn btn-outline-success">Submit</button>
                 <button id="login-button" type="button" onClick={handleBackToLogin} style={{ marginRight: "5vh" }} className="btn btn-outline-success">Back to Login</button>                
             </form>
