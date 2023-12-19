@@ -114,13 +114,18 @@ router.post('/notes', async (req, res) => {
         }
         const header = req.body.header.toString(); // Convert to string if necessary
         const body = req.body.body.toString();
+        const color = req.body.color;
         userInfo.notes.push({
             header: header,
             body: body,
+            color: color
         });
+
         console.log(userInfo);
         await userInfo.save();
-        res.status(200).json({ message: 'Successfuly stored notes' });
+        const noteID = userInfo._id;
+
+        res.status(200).json({ noteID: noteID, message: 'Successfuly stored notes' });
     }
     catch (error) {
         res.status(400).json({ message: 'Internal server error', error: error.message });
@@ -140,19 +145,13 @@ router.get('/usernotes', async (req, res) => {
         }
         console.log("User working with is: ", userInfo.notes);
 
-        const notesHeader = userInfo.notes.map(note => ({
+        const notesData = userInfo.notes.map(note => ({
             header: note.header,
-        }));
-
-        const notesBody = userInfo.notes.map(note => ({
             body: note.body,
+            color: note.color
         }));
 
-
-        // console.log("Header: ", notesHeader);
-        // console.log("Body: ", notesBody);
-
-        return res.status(200).json({ header: notesHeader, body: notesBody });
+        return res.status(200).json(notesData);
 
     }
     catch (error) {
@@ -168,14 +167,19 @@ router.delete('/deletenotes', async (req, res) => {
         if (!user) {
             console.log("No session");
             return res.status(500).json({ message: 'Internal server error', error: error.message });
-
         }
         const userInfo = await Model.findById(user._id);
         if (!userInfo) {
             return res.status(500).json({ message: 'Internal server error', error: error.message });
         }
 
-        const index = req.body.index;
+        const noteToDelete = req.body.noteToDelete;
+        const index = userInfo.notes.findIndex(note => note.header === noteToDelete.header && note.body === noteToDelete.body);
+
+        if (index === -1) {
+            return res.status(404).json({ message: 'Note not found' });
+        }
+
         console.log("Deleting this element-index: ", index);
         userInfo.notes.splice(index, 1);
         await userInfo.save();

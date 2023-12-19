@@ -7,6 +7,9 @@ const Notes = new mongoose.Schema({
     },
     body: {
         type: String
+    },
+    color: {
+        type: Number
     }
 })
 

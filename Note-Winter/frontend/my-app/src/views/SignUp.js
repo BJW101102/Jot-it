@@ -36,7 +36,6 @@ function SignUp() {
             const status = error.response.status
             if (status === 409){
                 swal("Oops!", "User name has already been taken", "error");
-
                 setUsername('');
                 setPassword('');
             }
