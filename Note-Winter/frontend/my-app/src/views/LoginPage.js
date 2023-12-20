@@ -9,11 +9,10 @@ import swal from 'sweetalert';
 
 function Login() {
 
-    var message = null;
-
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const url = 'http://localhost:5500/api/login'
+
     const handleUsername = async (event) => {
         setUsername(event.target.value);
     };
@@ -91,7 +90,6 @@ function Login() {
                 <br></br>
                 <button id="login-button" type="submit" onClick={handleSubmit}   style={{ marginRight: "5vh" }} className="btn btn-outline-success">Login</button>
                 <button id="login-button" type="button" onClick={handleSignUp}   style={{ marginRight: "5vh" }} className="btn btn-outline-success">Signup</button>
-                {message}
             </form>
         </div>
     );

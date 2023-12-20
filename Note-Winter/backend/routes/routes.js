@@ -7,6 +7,9 @@ const Model = require('../models/model');
 const bcrypt = require('bcrypt');
 module.exports = router;
 
+
+//========POST ROUTES========/
+
 //Post Route for new users
 router.post('/register', async (req, res) => {
     const username = req.body.username;
@@ -66,37 +69,6 @@ router.post('/login', async (req, res) => {
     }
 });
 
-//Get Route for Current User
-router.get('/user', async (req, res) => {
-    try {
-        if (!req.session.user) {
-            // console.log("No Sessions");
-            return res.status(401).json({ message: 'User not authenticated' });
-        }
-        const userInfo = req.session.user;
-        const user = await Model.findById(userInfo._id);
-        if (!user) {
-            return res.status(401).json({ message: 'User not found' });
-        }
-        res.status(200).json({ username: user.username });
-    }
-    catch (error) {
-        res.status(400).json({ message: error.message })
-    }
-});
-
-// Delete all entries route
-router.delete('/deleteAll', async (req, res) => {
-    try {
-        // Use the Mongoose Model to delete all entries
-        await Model.deleteMany({});
-
-        res.status(200).json({ message: 'All entries deleted successfully' });
-    } catch (error) {
-        res.status(500).json({ message: 'Internal server error', error: error.message });
-    }
-});
-
 //Post route for adding Notes
 router.post('/notes', async (req, res) => {
     try {
@@ -132,6 +104,27 @@ router.post('/notes', async (req, res) => {
     }
 })
 
+//========GET ROUTES========/
+
+//Get Route for Current User
+router.get('/user', async (req, res) => {
+    try {
+        if (!req.session.user) {
+            // console.log("No Sessions");
+            return res.status(401).json({ message: 'User not authenticated' });
+        }
+        const userInfo = req.session.user;
+        const user = await Model.findById(userInfo._id);
+        if (!user) {
+            return res.status(401).json({ message: 'User not found' });
+        }
+        res.status(200).json({ username: user.username });
+    }
+    catch (error) {
+        res.status(400).json({ message: error.message })
+    }
+});
+
 //Get route for user Notes
 router.get('/usernotes', async (req, res) => {
     try {
@@ -159,6 +152,58 @@ router.get('/usernotes', async (req, res) => {
 
     }
 })
+
+//========Patch ROUTES========/
+router.patch('/changecolor', async (req, res) => {
+    try {
+        const user = req.session.user;
+        console.log("Session is: ", user);
+        if (!user) {
+
+            console.log("No User");
+            return res.status(100).json({ message: 'Internal server error', error: error.message });
+        }
+        // console.log("LETS GO");
+
+        const userInfo = await Model.findById(user._id);
+        if (!userInfo) {
+                    console.log("LETS GO");
+            return res.status(401).json({ message: 'User not found' });
+        }
+
+
+        const color = req.body.color;
+        const index = req.body.noteIndex;
+        console.log(color);
+
+        userInfo.notes[index].color = color;
+        await userInfo.save();
+
+        console.log(userInfo);
+        
+
+        // console.log("Here");
+        res.status(200).json({ message: "Congrats" });
+
+    }
+    catch (error) {
+        res.status(500).json({ message: 'Internal server error', error: error.message });
+    }
+})
+
+//========DELETE ROUTES========/
+
+// Delete all entries route
+router.delete('/deleteAll', async (req, res) => {
+    try {
+        // Use the Mongoose Model to delete all entries
+        await Model.deleteMany({});
+
+        res.status(200).json({ message: 'All entries deleted successfully' });
+    } catch (error) {
+        res.status(500).json({ message: 'Internal server error', error: error.message });
+    }
+});
 
 //Delete route for user Notes
 router.delete('/deletenotes', async (req, res) => {
@@ -189,3 +234,4 @@ router.delete('/deletenotes', async (req, res) => {
         return res.status(500).json({ message: 'Internal server error', error: error.message });
     }
 })
+

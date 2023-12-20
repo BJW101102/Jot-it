@@ -4,27 +4,25 @@
 import React, { useState, useEffect } from 'react';
 import pencil from '../images/pencil-button.png';
 import eraser from '../images/eraser-button.png';
-import axios from 'axios';
 import color from '../images/color-palette.png';
+import axios from 'axios';
 
 const api = axios.create({
   baseURL: 'http://localhost:5500/api/',
-  withCredentials: true, 
+  withCredentials: true,
 });
 
 const colorPicker = [
-  { header: "#f1f2f3", body: "#f8f9fa" }, //Gray
+  { header: "#f1f2f3", body: "#f8f9fa" },   //Gray
   { header: "#f6a0a1", body: "#fea7a7bc" }, //Red
   { header: "#f7bbf9", body: "#ffc2ffbc" }, //Pink  
-  { header: "#f6d4a1", body: "#fedba7bc" },  //Orange
-  { header: "#b2f7a1", body: "#bafea7bc" },  //Green
+  { header: "#f6d4a1", body: "#fedba7bc" }, //Orange
+  { header: "#b2f7a1", body: "#bafea7bc" }, //Green
   { header: "#bce9f9", body: "#c4f0ffbc" }, //Blue  
   { header: "#bda0f8", body: "#c5a7febc" }, //Purple
 ];
 
 function Dashboard() {
-
-
 
   const [note, setNote] = useState('');
   const [noteList, setNoteList] = useState([{ header: 'Default Header', body: 'Default Body', colorIndex: 0 }]);
@@ -32,10 +30,7 @@ function Dashboard() {
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
 
-
-
-
-  //Begin: Fetching User Information
+  //=======FECTHES=========//
   const fetchUserData = async () => {
     try {
       const resp = await api.get('user', { withCredentials: true });
@@ -54,7 +49,7 @@ function Dashboard() {
       const notesData = resp.data;
 
       // Extract raw text from the 'header' property of each object
-      const extractedNotes = notesData.map(obj => ({ id: obj.id, header: obj.header, body: obj.body, colorIndex: obj.color}));
+      const extractedNotes = notesData.map(obj => ({ id: obj.id, header: obj.header, body: obj.body, colorIndex: obj.color }));
       console.log("Color Index: ", extractedNotes);
 
       setNoteList(extractedNotes);
@@ -69,10 +64,9 @@ function Dashboard() {
     fetchUserData();
     fetchUserNotes();
   }, []);
-  //End: Fetching User Information
 
 
-  //Begin: Handlers
+  //=======HANDLERS=========//
   const handleNoteChange = (event) => {
     setNote(() => event.target.value);
   };
@@ -82,7 +76,6 @@ function Dashboard() {
   };
 
   const handleClick = async () => {
-
     const newNote = {
       header: header,
       body: note,
@@ -91,7 +84,7 @@ function Dashboard() {
     };
 
     try {
-      const resp = await api.post('notes', { header: header, body: note, color: newNote.colorIndex}, { withCredentials: true });
+      const resp = await api.post('notes', { header: header, body: note, color: newNote.colorIndex }, { withCredentials: true });
       newNote.id = resp.data.noteID;
       console.log(newNote);
       setNoteList([...noteList, newNote]);
@@ -139,7 +132,17 @@ function Dashboard() {
 
     console.log("Found you at: ", noteToChange);
     console.log("Current color is: ", noteList[noteToChange].colorIndex);
+    console.log("Note ID is: ", note.id);
     const updatedColorIndex = (updatedNotes[noteToChange].colorIndex === 6) ? 0 : updatedNotes[noteToChange].colorIndex + 1;
+
+    try {
+      const resp = await api.patch('changecolor', { color: updatedColorIndex, noteIndex: i }, { withCredentials: true });
+      console.log(resp);
+    }
+    catch (error) {
+      console.log(error);
+    }
+
     updatedNotes[noteToChange].colorIndex = updatedColorIndex;
     setNoteList(updatedNotes);
 
@@ -151,16 +154,18 @@ function Dashboard() {
       cardBody.style.setProperty('background-color', colorPicker[updatedColorIndex].body, 'important');
     }
   };
-  //End: Handlers
 
+  //======COMPONENT=====//
   return (
     <div className='fluid-container'>
       <div className="Dashboard">
+        {/*=====HEADER=====*/}
         <h1>Note Taker</h1>
         {userData && userData.username && (
           <p>Welcome, {userData.username}!</p>
         )}
         <br></br>
+        {/*===FORM-CONTAINER===*/}
         <div className="form-container">
           <input
             value={header}
@@ -186,13 +191,18 @@ function Dashboard() {
         {loading ? (
           <p>Loading...</p>
         ) : (
+          //=====NOTE-DISPLAYER=====//
           noteList.length === 0 ? (<h1>Insert a Note</h1>) : (
             <div className="note-container">
               {
                 noteList.map((note, i) => (
                   <div key={i} className="card bg-light mb-3" style={{ width: "45vh", }}>
-                    <div id={`card-header-${i}`} className="card-header">{note.header}</div>
-                    <div id={`card-body-${i}`} className="card-body">
+                    {/*====HEADER-TEXT====*/}
+                    <div id={`card-header-${i}`} className="card-header" style={{ backgroundColor: colorPicker[note.colorIndex].header }}>
+                      {note.header}
+                    </div>
+                    <div id={`card-body-${i}`} className="card-body" style={{ backgroundColor: colorPicker[note.colorIndex].body }}>
+                      {/* ==== BODY-TEXT ==== */}
                       <p className="card-text">
                         {note.body.split('\n').map((lineNote, j) => (
                           <React.Fragment key={j}>
@@ -202,11 +212,16 @@ function Dashboard() {
                           </React.Fragment>
                         ))}
                       </p>
-                      <button onClick={() => handleDelete(note)} style={{ position: "relative", left: "-110px" }}>
+
+                    </div>
+                    <div style={{ display: "flex", marginTop: "0px", backgroundColor: colorPicker[note.colorIndex].body}}>
+                      {/* ==== DELETE BUTTON ==== */}
+                      <button onClick={() => handleDelete(note)} style={{left: "10px", marginRight: "2.5vh", top: "-2vh", position: "relative"}}>
                         <img src={eraser} alt="Download" style={{ width: '25px', height: '25px' }} />
                       </button>
-                      <button onClick={() => handleColorChange(note, i)}>
-                        <img src={color} alt="Download" style={{ width: '25px', position: "relative", left: '-100px' }} />
+                      {/* ==== COLOR CHANGE BUTTON ==== */}
+                      <button onClick={() => handleColorChange(note, i)}  style={{position: "relative", top: "-2vh"}}>
+                        <img src={color} alt="Change-Color" style={{ width: '25px', height: '25px'}} />
                       </button>
                     </div>
                   </div>

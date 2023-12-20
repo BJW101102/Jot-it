@@ -15,6 +15,7 @@
 
 .card-header{
   font-weight: bold;
+  border-radius: 2px !important;
 }
 #note-text{
   font-weight:normal;
