@@ -4,7 +4,11 @@
   justify-content: center;
   min-height: 100vh;
   text-align: center;
+  /* background-color: #121212; */
   background-color: #faf8de;
+/* color: white; */
+  
+
 }
 
 .form-container {
@@ -15,12 +19,20 @@
 
 .card-header{
   font-weight: bold;
-  border-radius: 2px !important;
+  /* border-radius: 2px !important; */
+  /* background-color:  #373c38d3
+  !important; */
+  /* color: white !important; */
+  /* border-color: #121212 !important; */
 }
+
 #note-text{
   font-weight:normal;
-  /* color: purple; */
+  
+  /* color: white; */
 }
+
+
 
 button {
   border: none;
@@ -40,6 +52,7 @@ button {
   margin: 1vh;
   position: relative;
   left: 6%;
+  /* border-color:#121212 !important; */
 }
 
 

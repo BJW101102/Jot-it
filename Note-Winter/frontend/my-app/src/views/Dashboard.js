@@ -22,6 +22,16 @@ const colorPicker = [
   { header: "#bda0f8", body: "#c5a7febc" }, //Purple
 ];
 
+const darkColorPicker = [
+  { header: "#373c38d3", body: "#393a36" },   //Gray
+  { header: "#a82424d3", body: "#a32626" }, //Red
+  { header: " #a14e80d3", body: " #a95082" }, //Pink  
+  { header: "#e38109d3", body: "#e39842" }, //Orange
+  { header: "#607d29d3", body: "#6a7f2b" }, //Green
+  { header: "#293b7dd3", body: "#1c397b" }, //Blue  
+  { header: "#5b297dd3", body: "#51267bb9" }, //Purple 
+];
+
 function Dashboard() {
 
   const [note, setNote] = useState('');
@@ -29,6 +39,9 @@ function Dashboard() {
   const [header, setHeader] = useState('');
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [darkMode, setDarkMode] = useState(false);
+
+
 
   //=======FECTHES=========//
   const fetchUserData = async () => {
@@ -110,8 +123,15 @@ function Dashboard() {
       updatedNoteList.forEach((note, index) => {
         const cardHeader = document.getElementById(`card-header-${index}`);
         const cardBody = document.getElementById(`card-body-${index}`);
-        cardHeader.style.setProperty('background-color', colorPicker[note.colorIndex].header, 'important');
-        cardBody.style.setProperty('background-color', colorPicker[note.colorIndex].body, 'important');
+        if (!darkMode) {
+          cardHeader.style.setProperty('background-color', colorPicker[note.colorIndex].header, 'important');
+          cardBody.style.setProperty('background-color', colorPicker[note.colorIndex].body, 'important');
+        }
+        else {
+          cardHeader.style.setProperty('background-color', darkColorPicker[note.colorIndex].header, 'important');
+          cardBody.style.setProperty('background-color', darkColorPicker[note.colorIndex].body, 'important');
+        }
+
       });
 
 
@@ -155,10 +175,71 @@ function Dashboard() {
     }
   };
 
+  const handleDarkMode = async () => {
+    const cardHeader = document.querySelectorAll(".card-header");
+    const cardBody = document.querySelectorAll(".card-body");
+    const card = document.querySelectorAll(".card");
+    const dashboard = document.querySelectorAll(".Dashboard");
+    const cardtext = document.querySelectorAll("#note-text");
+
+    if (!darkMode) {
+      cardHeader.forEach((headerElement) => {
+        headerElement.style.setProperty('border-color', "#121212", "important");
+        headerElement.style.setProperty('color', "white", "important");
+      });
+
+      cardBody.forEach((bodyElement) => {
+        bodyElement.style.setProperty('border-color', "#121212", "important");
+      });
+
+      card.forEach((cardElement) => {
+        cardElement.style.setProperty('border-color', "#121212", "important");
+      });
+
+      dashboard.forEach((dashboardElement) => {
+        dashboardElement.style.setProperty('background-color', "#121212", "important");
+        dashboardElement.style.setProperty('color', "white", "important");
+      })
+
+      cardtext.forEach((textElement => {
+        textElement.style.setProperty('color', "white", "important");
+      }))
+      setDarkMode(true);
+    }
+    else {
+      cardHeader.forEach((headerElement) => {
+        headerElement.style.removeProperty('border-color');
+        headerElement.style.removeProperty('color');
+      });
+
+      cardBody.forEach((bodyElement) => {
+        bodyElement.style.removeProperty('border-color');
+      });
+
+      card.forEach((cardElement) => {
+        cardElement.style.removeProperty('border-color');
+      });
+
+      dashboard.forEach((dashboardElement) => {
+        dashboardElement.style.removeProperty('background-color');
+        dashboardElement.style.removeProperty('color');
+      });
+
+      cardtext.forEach((textElement) => {
+        textElement.style.removeProperty('color');
+      })
+
+
+
+      setDarkMode(false);
+    }
+  }
+
   //======COMPONENT=====//
   return (
     <div className='fluid-container'>
       <div className="Dashboard">
+        <button onClick={handleDarkMode}>Dark Mode Tester</button>
         {/*=====HEADER=====*/}
         <h1>Note Taker</h1>
         {userData && userData.username && (
@@ -198,30 +279,30 @@ function Dashboard() {
                 noteList.map((note, i) => (
                   <div key={i} className="card bg-light mb-3" style={{ width: "45vh", }}>
                     {/*====HEADER-TEXT====*/}
-                    <div id={`card-header-${i}`} className="card-header" style={{ backgroundColor: colorPicker[note.colorIndex].header }}>
+                    <div id={`card-header-${i}`} className="card-header" style={{ backgroundColor: darkMode ? darkColorPicker[note.colorIndex].header : colorPicker[note.colorIndex].header }}>
                       {note.header}
                     </div>
-                    <div id={`card-body-${i}`} className="card-body" style={{ backgroundColor: colorPicker[note.colorIndex].body }}>
+                    <div id={`card-body-${i}`} className="card-body" style={{ backgroundColor: darkMode ? darkColorPicker[note.colorIndex].body : colorPicker[note.colorIndex].body }}>
                       {/* ==== BODY-TEXT ==== */}
                       <p className="card-text">
                         {note.body.split('\n').map((lineNote, j) => (
                           <React.Fragment key={j}>
                             {j > 0 && <br />}
-                            {<input type="checkbox" className="form-check-input" style={{ position: "relative", left: "-1vh" }} />}
+                            {/* {<input type="checkbox" className="form-check-input" style={{ position: "relative", left: "-1vh" }} />} */}
                             {<label id="note-text" className="form-check-label">{lineNote}</label>}
                           </React.Fragment>
                         ))}
                       </p>
 
                     </div>
-                    <div style={{ display: "flex", marginTop: "0px", backgroundColor: colorPicker[note.colorIndex].body}}>
+                    <div style={{ display: "flex", marginTop: "0px", backgroundColor: darkMode ? darkColorPicker[note.colorIndex].body : colorPicker[note.colorIndex].body }}>
                       {/* ==== DELETE BUTTON ==== */}
-                      <button onClick={() => handleDelete(note)} style={{left: "10px", marginRight: "2.5vh", top: "-2vh", position: "relative"}}>
+                      <button onClick={() => handleDelete(note)} style={{ left: "10px", marginRight: "2.5vh", top: "-2vh", position: "relative" }}>
                         <img src={eraser} alt="Download" style={{ width: '25px', height: '25px' }} />
                       </button>
                       {/* ==== COLOR CHANGE BUTTON ==== */}
-                      <button onClick={() => handleColorChange(note, i)}  style={{position: "relative", top: "-2vh"}}>
-                        <img src={color} alt="Change-Color" style={{ width: '25px', height: '25px'}} />
+                      <button onClick={() => handleColorChange(note, i)} style={{ position: "relative", top: "-2vh" }}>
+                        <img src={color} alt="Change-Color" style={{ width: '25px', height: '25px' }} />
                       </button>
                     </div>
                   </div>
