@@ -5,6 +5,9 @@ import React, { useState, useEffect } from 'react';
 import pencil from '../images/pencil-button.png';
 import eraser from '../images/eraser-button.png';
 import color from '../images/color-palette.png';
+import lightpencil from '../images/light-pencil-button.png';
+import lighteraser from '../images/light-eraser-button.png';
+import lightcolor from '../images/light-color-palette.png';
 import axios from 'axios';
 
 const api = axios.create({
@@ -253,18 +256,18 @@ function Dashboard() {
             onChange={handleHeaderChange}
             type="text"
             placeholder="Note Header"
-            style={{ height: "5vh", width: "100vh" }}
+            style={{ height: "5vh", width: "100vh",backgroundColor: darkMode ? "#F8F9FA": "white"}}
           />
           <textarea
             value={note}
             onChange={handleNoteChange}
             placeholder="Leave a note here"
             id="floatingTextarea"
-            style={{ height: "10vh", width: "100vh", }}>
+            style={{ height: "10vh", width: "100vh",backgroundColor: darkMode ? "#F8F9FA": "white" }}>
           </textarea>
           <div className="button-container">
             <button onClick={handleClick}>
-              <img src={pencil} alt="Download" style={{ width: '50px', height: '50px' }} />
+              <img src={darkMode ? lightpencil: pencil} alt="Download" style={{width: '50px', height: '50px',}} />
             </button>
           </div>
         </div>
@@ -277,9 +280,9 @@ function Dashboard() {
             <div className="note-container">
               {
                 noteList.map((note, i) => (
-                  <div key={i} className="card bg-light mb-3" style={{ width: "45vh", }}>
+                  <div key={i} className="card bg-light mb-3" style={{ width: "45vh",  borderColor: darkMode ? "#121212" : "unset" }}>
                     {/*====HEADER-TEXT====*/}
-                    <div id={`card-header-${i}`} className="card-header" style={{ backgroundColor: darkMode ? darkColorPicker[note.colorIndex].header : colorPicker[note.colorIndex].header }}>
+                    <div id={`card-header-${i}`} className="card-header" style={{ backgroundColor: darkMode ? darkColorPicker[note.colorIndex].header : colorPicker[note.colorIndex].header, borderColor: darkMode ? "#121212" : "unset" }}>
                       {note.header}
                     </div>
                     <div id={`card-body-${i}`} className="card-body" style={{ backgroundColor: darkMode ? darkColorPicker[note.colorIndex].body : colorPicker[note.colorIndex].body }}>
@@ -289,7 +292,7 @@ function Dashboard() {
                           <React.Fragment key={j}>
                             {j > 0 && <br />}
                             {/* {<input type="checkbox" className="form-check-input" style={{ position: "relative", left: "-1vh" }} />} */}
-                            {<label id="note-text" className="form-check-label">{lineNote}</label>}
+                            {<label id="note-text" style={{color: darkMode ? "white":"unset"}} className="form-check-label">{lineNote}</label>}
                           </React.Fragment>
                         ))}
                       </p>
@@ -298,11 +301,11 @@ function Dashboard() {
                     <div style={{ display: "flex", marginTop: "0px", backgroundColor: darkMode ? darkColorPicker[note.colorIndex].body : colorPicker[note.colorIndex].body }}>
                       {/* ==== DELETE BUTTON ==== */}
                       <button onClick={() => handleDelete(note)} style={{ left: "10px", marginRight: "2.5vh", top: "-2vh", position: "relative" }}>
-                        <img src={eraser} alt="Download" style={{ width: '25px', height: '25px' }} />
+                        <img src={darkMode ? lighteraser: eraser} alt="Download" style={{ width: '25px', height: '25px' }} />
                       </button>
                       {/* ==== COLOR CHANGE BUTTON ==== */}
                       <button onClick={() => handleColorChange(note, i)} style={{ position: "relative", top: "-2vh" }}>
-                        <img src={color} alt="Change-Color" style={{ width: '25px', height: '25px' }} />
+                        <img src={darkMode ? lightcolor: color} alt="Change-Color" style={{ width: '25px', height: '25px' }} />
                       </button>
                     </div>
                   </div>
