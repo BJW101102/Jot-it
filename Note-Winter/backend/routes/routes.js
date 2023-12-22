@@ -95,7 +95,8 @@ router.post('/notes', async (req, res) => {
 
         console.log(userInfo);
         await userInfo.save();
-        const noteID = userInfo._id;
+        const lastIndex = userInfo.notes.length - 1;
+        const noteID = userInfo.notes[lastIndex]._id;
 
         res.status(200).json({ noteID: noteID, message: 'Successfuly stored notes' });
     }
@@ -141,7 +142,8 @@ router.get('/usernotes', async (req, res) => {
         const notesData = userInfo.notes.map(note => ({
             header: note.header,
             body: note.body,
-            color: note.color
+            color: note.color,
+            id: note._id
         }));
 
         return res.status(200).json(notesData);
