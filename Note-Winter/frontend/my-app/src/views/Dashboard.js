@@ -7,6 +7,8 @@ import Card from '../components/NoteCard';
 import NoteForm from '../components/NoteForm';
 import axios from 'axios';
 
+
+
 const api = axios.create({
   baseURL: 'http://localhost:5500/api/',
   withCredentials: true,
@@ -49,8 +51,36 @@ function Dashboard() {
       console.log(resp.data.username);
       setUserData(resp.data);
       setDarkMode(resp.data.theme);
+      //Couldn't just call the method, very weird!
       if (resp.data.theme === true) {
-        handleDarkMode();
+        const cardHeader = document.querySelectorAll(".card-header");
+        const cardBody = document.querySelectorAll(".card-body");
+        const card = document.querySelectorAll(".card");
+        const dashboard = document.querySelectorAll(".Dashboard");
+        const cardtext = document.querySelectorAll("#note-text");
+        cardHeader.forEach((headerElement) => {
+          headerElement.style.setProperty('border-color', "#121212", "important");
+          headerElement.style.setProperty('color', "white", "important");
+        });
+
+        cardBody.forEach((bodyElement) => {
+          bodyElement.style.setProperty('border-color', "#121212", "important");
+        });
+
+        card.forEach((cardElement) => {
+          cardElement.style.setProperty('border-color', "#121212", "important");
+        });
+
+        dashboard.forEach((dashboardElement) => {
+          dashboardElement.style.setProperty('background-color', "#121212", "important");
+          dashboardElement.style.setProperty('color', "white", "important");
+        })
+
+        cardtext.forEach((textElement => {
+          textElement.style.setProperty('color', "white", "important");
+        }))
+
+        setDarkMode(true);
       }
       console.log("Theme is: ", resp.data.theme);
     }
@@ -59,7 +89,7 @@ function Dashboard() {
       console.log("No user");
 
     }
-  }
+  };
 
   const fetchUserNotes = async () => {
     try {
@@ -82,6 +112,8 @@ function Dashboard() {
     fetchUserData();
     fetchUserNotes();
   }, []);
+
+
 
 
   //=======HANDLERS-NOTE/THEME=========//
@@ -182,7 +214,6 @@ function Dashboard() {
       console.log(error.response.data);
     }
   };
-
 
   //=======HANDLERS-CARD-BUTTONS=========//
   const handleColorChange = async (note, i) => {
@@ -308,6 +339,20 @@ function Dashboard() {
   //======COMPONENT=====//
   return (
     <div className='fluid-container'>
+      <nav style={{ backgroundColor: darkMode ? "#595D59" : "#5D432C", display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 20px' }}>
+        <div style={{ color: "white", display: 'flex', alignItems: 'center' }}>
+          <span style={{ marginLeft: '2vh' }}>User: {userData.username}</span>
+          <span style={{ marginLeft: '2vh', marginRight: '2vh' }}>Total Notes: {noteList.length}</span>
+          <span style={{ marginRight: '2vh' }}>Favorited Notes: {noteList.filter(note => note.isFavorite).length}</span>
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <label className="switch" style={{ marginRight: '1rem' }}>
+            <input onChange={handleDarkMode} type="checkbox" checked={darkMode} />
+            <span className="slider round"></span>
+          </label>
+          <button style={{ color: 'white', height: '10vh' }}>Sign Out</button>
+        </div>
+      </nav>
       <div className="Dashboard">
         <Header username={userData && userData.username} darkMode={handleDarkMode} />
         <NoteForm
@@ -318,8 +363,10 @@ function Dashboard() {
           handleClick={handleClick}
           darkMode={darkMode}
         />
+
         {loading ? (
           <p>Loading...</p>
+
         ) : (
           //=====NOTE-DISPLAYER=====//
           noteList.length === 0 ? (<h1>Insert a Note</h1>) : (

@@ -14,7 +14,7 @@ const Notes = new mongoose.Schema({
     isFavorite:{
         type: Boolean
     }
-})
+});
 
 const User = new mongoose.Schema({
     username: {
@@ -33,7 +33,7 @@ const User = new mongoose.Schema({
     notes: {
         type: [Notes]
     }
-})
+});
 
 //Hashing Password
 // User.pre('save', async function (next) {

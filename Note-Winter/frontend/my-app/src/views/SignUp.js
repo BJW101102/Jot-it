@@ -16,6 +16,7 @@ function SignUp() {
     const handleUsername = async (event) => {
         setUsername(event.target.value);
     };
+    
     const handlePassword = async (event) => {
         setPassword(event.target.value);
     };
@@ -43,17 +44,17 @@ function SignUp() {
             console.log("Error Message: ", error.response.data.message);
         }
 
-    }
+    };
 
     const handleBackToLogin = async () => {
         window.location.href = 'http://localhost:3000/login';
 
-    }
+    };
 
     return (
         <div className="Login" style={{ textAlign: "center" }}>
             <h1>SignUp</h1>
-            <form style={{ width: "25vh", margin: "auto" }}>
+            <form style={{ width: "100vh", margin: "auto" }}>
                 <div className="form-group">
                     <label>Username</label>
                     <input
