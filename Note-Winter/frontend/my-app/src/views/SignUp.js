@@ -24,7 +24,7 @@ function SignUp() {
         event.preventDefault();
         console.log("Clicked");
         try {
-            const resp = await axios.post(url, { username: username, password: password }, { withCredentials: true });
+            const resp = await axios.post(url, { username: username, password: password, theme: false}, { withCredentials: true });
             if (resp.status === 200) {
 
                 swal("Awesome!", "Great to have you", "success").then(() => {

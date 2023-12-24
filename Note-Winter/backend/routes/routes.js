@@ -22,7 +22,8 @@ router.post('/register', async (req, res) => {
     // console.log("Username: %s \nPassword: %s", username, password);
     const user = new Model({
         username: username,
-        password: password
+        password: password,
+        theme: false
     })
     try {
         const userToSave = await user.save();
@@ -87,13 +88,15 @@ router.post('/notes', async (req, res) => {
         const header = req.body.header.toString(); // Convert to string if necessary
         const body = req.body.body.toString();
         const color = req.body.color;
+        const isFavorite = req.body.isFavorite;
         userInfo.notes.push({
             header: header,
             body: body,
-            color: color
+            color: color,
+            isFavorite: isFavorite
         });
 
-        console.log(userInfo);
+        // console.log(userInfo);
         await userInfo.save();
         const lastIndex = userInfo.notes.length - 1;
         const noteID = userInfo.notes[lastIndex]._id;
@@ -103,7 +106,7 @@ router.post('/notes', async (req, res) => {
     catch (error) {
         res.status(400).json({ message: 'Internal server error', error: error.message });
     }
-})
+});
 
 //========GET ROUTES========/
 
@@ -119,7 +122,7 @@ router.get('/user', async (req, res) => {
         if (!user) {
             return res.status(401).json({ message: 'User not found' });
         }
-        res.status(200).json({ username: user.username });
+        res.status(200).json({ username: user.username, theme: user.theme });
     }
     catch (error) {
         res.status(400).json({ message: error.message })
@@ -137,13 +140,14 @@ router.get('/usernotes', async (req, res) => {
         if (!userInfo) {
             return res.status(401).json({ message: 'User not found' });
         }
-        console.log("User working with is: ", userInfo.notes);
+        // console.log("User working with is: ", userInfo.notes);
 
         const notesData = userInfo.notes.map(note => ({
             header: note.header,
             body: note.body,
             color: note.color,
-            id: note._id
+            isFavorite: note.isFavorite,
+            id: note._id,
         }));
 
         return res.status(200).json(notesData);
@@ -153,9 +157,10 @@ router.get('/usernotes', async (req, res) => {
         res.status(500).json({ message: 'Internal server error', error: error.message });
 
     }
-})
+});
 
 //========Patch ROUTES========/
+
 router.patch('/changecolor', async (req, res) => {
     try {
         const user = req.session.user;
@@ -169,7 +174,7 @@ router.patch('/changecolor', async (req, res) => {
 
         const userInfo = await Model.findById(user._id);
         if (!userInfo) {
-                    console.log("LETS GO");
+            console.log("LETS GO");
             return res.status(401).json({ message: 'User not found' });
         }
 
@@ -182,7 +187,7 @@ router.patch('/changecolor', async (req, res) => {
         await userInfo.save();
 
         console.log(userInfo);
-        
+
 
         // console.log("Here");
         res.status(200).json({ message: "Congrats" });
@@ -191,7 +196,74 @@ router.patch('/changecolor', async (req, res) => {
     catch (error) {
         res.status(500).json({ message: 'Internal server error', error: error.message });
     }
-})
+});
+
+router.patch('/favorite', async (req, res) => {
+    try {
+        const user = req.session.user;
+        if (!user) {
+            return res.status(401).json({ message: 'User not authenticated' });
+        }
+        const userInfo = await Model.findById(user._id);
+        if (!userInfo) {
+            return res.status(401).json({ message: 'User not found' });
+        }
+
+        const situation = req.body.situation;
+        const favNoteID = req.body.favNoteID;
+        const swapNoteID = req.body.swapNoteID;
+        const favNoteIndex = userInfo.notes.findIndex(note => note.id === favNoteID);
+        const favNote = userInfo.notes[favNoteIndex];
+        // console.log("Fav Note Index is: ", favNoteIndex);
+        // console.log("Fav Note isFavorite?: ", userInfo.notes[favNoteIndex]);
+
+        switch (situation) {
+            case 0: //Favorite No Swap
+                userInfo.notes[favNoteIndex].isFavorite = true;
+                break;
+            case 1: //Favorite With Swap
+                const swapNoteIndex = userInfo.notes.findIndex(note => note.id === swapNoteID);
+                userInfo.notes[favNoteIndex].isFavorite = true;
+                // console.log("Swap Index is: ", swapNoteIndex);
+                if (swapNoteIndex === -1) {
+                }
+                [userInfo.notes[favNoteIndex], userInfo.notes[swapNoteIndex]] = [
+                    userInfo.notes[swapNoteIndex],
+                    userInfo.notes[favNoteIndex],
+                ];
+                // console.log("After swap:", userInfo.notes);
+                break;
+            case 2: //Unfavorite
+                userInfo.notes[favNoteIndex].isFavorite = false;
+                userInfo.notes[favNoteIndex].isFavorite = false;
+                userInfo.notes.splice(favNoteIndex, 1);
+                userInfo.notes.push(favNote);
+        }
+        await userInfo.save();
+        return res.status(200).json({ message: "Favorite handled" });
+
+
+    } catch (error) {
+        res.status(500).json({ message: 'Internal server error', error: error.message });
+
+    }
+});
+
+router.patch('/theme', async (req, res) => {
+    const user = req.session.user;
+    if (!user) {
+        return res.status(401).json({ message: 'User not authenticated' });
+    }
+    const userInfo = await Model.findById(user._id);
+    if (!userInfo){
+        return res.status(401).json({ message: 'User not authenticated' });
+    }
+
+    const theme = req.body.theme;
+    userInfo.theme = theme;
+    await userInfo.save();
+    return res.status(200).json({ message: 'Theme Saved' });
+});
 
 //========DELETE ROUTES========/
 
@@ -207,7 +279,7 @@ router.delete('/deleteAll', async (req, res) => {
     }
 });
 
-//Delete route for user Notes
+// Delete route for user Notes
 router.delete('/deletenotes', async (req, res) => {
     try {
         const user = req.session.user;
@@ -235,5 +307,8 @@ router.delete('/deletenotes', async (req, res) => {
     catch (error) {
         return res.status(500).json({ message: 'Internal server error', error: error.message });
     }
-})
+});
+
+
+
 

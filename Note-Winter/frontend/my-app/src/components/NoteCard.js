@@ -8,14 +8,13 @@ import eraser from '../images/eraser-button.png';
 import color from '../images/color-palette.png';
 import gold from '../images/gold-star.png';
 import save from '../images/save-button.png';
-import swal from 'sweetalert';
 
-
-import lighteraser from '../images/light-eraser-button.png';
-import lightcolor from '../images/light-color-palette.png';
-import lightstar from '../images/light-favorite-star.png';
-import lighteditpencil from '../images/light-edit-pencil.png';
-import lightgoldstar from '../images/light-gold-star.png';
+// import swal from 'sweetalert';
+// import lighteraser from '../images/light-eraser-button.png';
+// import lightcolor from '../images/light-color-palette.png';
+// import lightstar from '../images/light-favorite-star.png';
+// import lighteditpencil from '../images/light-edit-pencil.png';
+// import lightgoldstar from '../images/light-gold-star.png';
 
 
 
@@ -57,10 +56,6 @@ const Card = ({ note, i, darkMode, handleColorChange, handleFavoriteNote, handle
     const handleBodyChange = (event) => {
         setEditedBody(event.target.value);
     };
-
-    const handleEditInteference = () => {
-        swal("Oops!", "A note is currently in edit mode, address that first", "error");
-    }
 
     const handleSave = (note) => {
         // Call the handleEdit function to update the note with the edited header and body

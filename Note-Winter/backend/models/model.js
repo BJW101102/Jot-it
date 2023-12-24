@@ -10,6 +10,9 @@ const Notes = new mongoose.Schema({
     },
     color: {
         type: Number
+    },
+    isFavorite:{
+        type: Boolean
     }
 })
 
@@ -22,6 +25,10 @@ const User = new mongoose.Schema({
     password: {
         required: true,
         type: String
+    },
+    theme: {
+        required: true,
+        type: Boolean
     },
     notes: {
         type: [Notes]

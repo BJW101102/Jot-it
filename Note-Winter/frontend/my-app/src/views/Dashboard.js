@@ -2,8 +2,6 @@
 //Dashboard
 
 import React, { useState, useEffect } from 'react';
-import star from '../images/favorite-star.png';
-import gold from '../images/gold-star.png';
 import Header from '../components/Header';
 import Card from '../components/NoteCard';
 import NoteForm from '../components/NoteForm';
@@ -20,7 +18,7 @@ function Dashboard() {
   const [note, setNote] = useState('');
   const [noteList, setNoteList] = useState([{ header: 'Default Header', body: 'Default Body', colorIndex: 0 }]);
   const [header, setHeader] = useState('');
-  const [userData, setUserData] = useState(null);
+  const [userData, setUserData] = useState('');
   const [loading, setLoading] = useState(true);
   const [darkMode, setDarkMode] = useState(false);
 
@@ -48,11 +46,18 @@ function Dashboard() {
   const fetchUserData = async () => {
     try {
       const resp = await api.get('user', { withCredentials: true });
-      // console.log("Response is: ", resp);
+      console.log(resp.data.username);
       setUserData(resp.data);
+      setDarkMode(resp.data.theme);
+      if (resp.data.theme === true) {
+        handleDarkMode();
+      }
+      console.log("Theme is: ", resp.data.theme);
     }
     catch (error) {
       console.error('Error fetching user data:', error);
+      console.log("No user");
+
     }
   }
 
@@ -61,11 +66,10 @@ function Dashboard() {
       const resp = await api.get('usernotes', { withCredentials: true });
       console.log(resp);
       const notesData = resp.data;
-
       // Extract raw text from the 'header' property of each object
-      const extractedNotes = notesData.map(obj => ({ id: obj.id, header: obj.header, body: obj.body, colorIndex: obj.color }));
+      const extractedNotes = notesData.map(obj => ({ id: obj.id, header: obj.header, body: obj.body, colorIndex: obj.color, isFavorite: obj.isFavorite }
+      ));
       console.log("Color Index: ", extractedNotes);
-
       setNoteList(extractedNotes);
       setLoading(false);
     } catch (error) {
@@ -80,7 +84,7 @@ function Dashboard() {
   }, []);
 
 
-  //=======HANDLERS=========//
+  //=======HANDLERS-NOTE/THEME=========//
   const handleNoteChange = (event) => {
     setNote(() => event.target.value);
   };
@@ -99,7 +103,7 @@ function Dashboard() {
     };
 
     try {
-      const resp = await api.post('notes', { header: header, body: note, color: newNote.colorIndex }, { withCredentials: true });
+      const resp = await api.post('notes', { header: header, body: note, color: newNote.colorIndex, isFavorite: newNote.isFavorite }, { withCredentials: true });
       newNote.id = resp.data.noteID;
       console.log(newNote);
       setNoteList([...noteList, newNote]);
@@ -111,35 +115,76 @@ function Dashboard() {
 
   };
 
-  const handleDelete = async (noteToDelete) => {
-    console.log("Before Filter:  ", noteList);
-    const updatedNoteList = noteList.filter((note) => note !== noteToDelete);
-    console.log("After Filter: ", updatedNoteList);
+  const handleDarkMode = async () => {
+    const cardHeader = document.querySelectorAll(".card-header");
+    const cardBody = document.querySelectorAll(".card-body");
+    const card = document.querySelectorAll(".card");
+    const dashboard = document.querySelectorAll(".Dashboard");
+    const cardtext = document.querySelectorAll("#note-text");
+    var darkModeRequest = false;
+
+    if (!darkMode) {
+      cardHeader.forEach((headerElement) => {
+        headerElement.style.setProperty('border-color', "#121212", "important");
+        headerElement.style.setProperty('color', "white", "important");
+      });
+
+      cardBody.forEach((bodyElement) => {
+        bodyElement.style.setProperty('border-color', "#121212", "important");
+      });
+
+      card.forEach((cardElement) => {
+        cardElement.style.setProperty('border-color', "#121212", "important");
+      });
+
+      dashboard.forEach((dashboardElement) => {
+        dashboardElement.style.setProperty('background-color', "#121212", "important");
+        dashboardElement.style.setProperty('color', "white", "important");
+      })
+
+      cardtext.forEach((textElement => {
+        textElement.style.setProperty('color', "white", "important");
+      }))
+
+      setDarkMode(true);
+      darkModeRequest = true;
+    }
+    else {
+      cardHeader.forEach((headerElement) => {
+        headerElement.style.removeProperty('border-color');
+        headerElement.style.removeProperty('color');
+      });
+
+      cardBody.forEach((bodyElement) => {
+        bodyElement.style.removeProperty('border-color');
+      });
+
+      card.forEach((cardElement) => {
+        cardElement.style.removeProperty('border-color');
+      });
+
+      dashboard.forEach((dashboardElement) => {
+        dashboardElement.style.removeProperty('background-color');
+        dashboardElement.style.removeProperty('color');
+      });
+
+      cardtext.forEach((textElement) => {
+        textElement.style.removeProperty('color');
+      })
+      setDarkMode(false);
+      darkModeRequest = false;
+    }
     try {
-      const resp = await api.delete('deletenotes', {
-        data: { noteToDelete },
-        withCredentials: true
-      });
-      updatedNoteList.forEach((note, index) => {
-        const cardHeader = document.getElementById(`card-header-${index}`);
-        const cardBody = document.getElementById(`card-body-${index}`);
-        if (!darkMode) {
-          cardHeader.style.setProperty('background-color', colorPicker[note.colorIndex].header, 'important');
-          cardBody.style.setProperty('background-color', colorPicker[note.colorIndex].body, 'important');
-        }
-        else {
-          cardHeader.style.setProperty('background-color', darkColorPicker[note.colorIndex].header, 'important');
-          cardBody.style.setProperty('background-color', darkColorPicker[note.colorIndex].body, 'important');
-        }
-      });
-      setNoteList(updatedNoteList);
-      console.log(resp.data);
+      const resp = await api.patch('theme', { theme: darkModeRequest }, { withCredentials: true });
+      console.log(resp);
     }
     catch (error) {
       console.log(error.response.data);
     }
   };
 
+
+  //=======HANDLERS-CARD-BUTTONS=========//
   const handleColorChange = async (note, i) => {
 
     const updatedNotes = [...noteList];
@@ -170,77 +215,24 @@ function Dashboard() {
     }
   };
 
-  //Add Request
-  const handleDarkMode = async () => {
-    const cardHeader = document.querySelectorAll(".card-header");
-    const cardBody = document.querySelectorAll(".card-body");
-    const card = document.querySelectorAll(".card");
-    const dashboard = document.querySelectorAll(".Dashboard");
-    const cardtext = document.querySelectorAll("#note-text");
-
-    if (!darkMode) {
-      cardHeader.forEach((headerElement) => {
-        headerElement.style.setProperty('border-color', "#121212", "important");
-        headerElement.style.setProperty('color', "white", "important");
-      });
-
-      cardBody.forEach((bodyElement) => {
-        bodyElement.style.setProperty('border-color', "#121212", "important");
-      });
-
-      card.forEach((cardElement) => {
-        cardElement.style.setProperty('border-color', "#121212", "important");
-      });
-
-      dashboard.forEach((dashboardElement) => {
-        dashboardElement.style.setProperty('background-color', "#121212", "important");
-        dashboardElement.style.setProperty('color', "white", "important");
-      })
-
-      cardtext.forEach((textElement => {
-        textElement.style.setProperty('color', "white", "important");
-      }))
-      setDarkMode(true);
-    }
-    else {
-      cardHeader.forEach((headerElement) => {
-        headerElement.style.removeProperty('border-color');
-        headerElement.style.removeProperty('color');
-      });
-
-      cardBody.forEach((bodyElement) => {
-        bodyElement.style.removeProperty('border-color');
-      });
-
-      card.forEach((cardElement) => {
-        cardElement.style.removeProperty('border-color');
-      });
-
-      dashboard.forEach((dashboardElement) => {
-        dashboardElement.style.removeProperty('background-color');
-        dashboardElement.style.removeProperty('color');
-      });
-
-      cardtext.forEach((textElement) => {
-        textElement.style.removeProperty('color');
-      })
-      setDarkMode(false);
-    }
-  };
-
-  //Add Request
   const handleFavoriteNote = async (favNote) => {
     console.log("Fav Id: ", favNote.id);
     const updatedNotes = [...noteList];
     const noteToFavoriteIndex = updatedNotes.indexOf(favNote);
+    var swappedNoteIndex = -1;
+    var situation = 0;
     if (!updatedNotes[noteToFavoriteIndex].isFavorite) {
       updatedNotes[noteToFavoriteIndex].isFavorite = true;
       const firstUnfavoritedIndex = updatedNotes.findIndex((note) => !note.isFavorite);
+      console.log("favNoteIndex is: ", noteToFavoriteIndex);
+      console.log("swappedNoteIndex is: ", swappedNoteIndex);
       if (firstUnfavoritedIndex !== -1 && noteToFavoriteIndex !== 0 && !updatedNotes[noteToFavoriteIndex - 1].isFavorite) {
         [updatedNotes[noteToFavoriteIndex], updatedNotes[firstUnfavoritedIndex]] = [
           updatedNotes[firstUnfavoritedIndex],
           updatedNotes[noteToFavoriteIndex],
         ];
+        swappedNoteIndex = noteToFavoriteIndex;  //Swapped has happened new index
+        situation = 1;
       }
     }
     else {
@@ -248,8 +240,69 @@ function Dashboard() {
       updatedNotes.splice(noteToFavoriteIndex, 1); // Remove the unfavorited note from its current position
       updatedNotes.push(favNote); // Append it to the end of the array
       console.log("Fav not boolean: ", favNote.isFavorite);
+      situation = 2;
+
+    }
+    switch (situation) {
+      case 0: //Favorite with no swap
+        try {
+          const resp = await api.patch('favorite', { favNoteID: favNote.id, swapNoteID: null, situation: 0 }, { withCredentials: true });
+          console.log(resp);
+        }
+        catch (error) {
+          console.log(error);
+        }
+        break;
+
+      case 1://Favorite with swap
+        try {
+          const resp = await api.patch('favorite', { favNoteID: favNote.id, swapNoteID: updatedNotes[swappedNoteIndex].id, situation: 1 }, { withCredentials: true });
+          console.log(resp);
+        }
+        catch (error) {
+          console.log(error);
+        }
+        break;
+
+      case 2: //Unfavorite
+        try {
+          const resp = await api.patch('favorite', { favNoteID: favNote.id, swapNoteID: null, situation: 2 }, { withCredentials: true });
+          console.log(resp);
+        }
+        catch (error) {
+          console.log(error);
+        }
     }
     setNoteList(updatedNotes);
+  };
+
+  const handleDelete = async (noteToDelete) => {
+    console.log("Before Filter:  ", noteList);
+    const updatedNoteList = noteList.filter((note) => note !== noteToDelete);
+    console.log("After Filter: ", updatedNoteList);
+    try {
+      const resp = await api.delete('deletenotes', {
+        data: { noteToDelete },
+        withCredentials: true
+      });
+      updatedNoteList.forEach((note, index) => {
+        const cardHeader = document.getElementById(`card-header-${index}`);
+        const cardBody = document.getElementById(`card-body-${index}`);
+        if (!darkMode) {
+          cardHeader.style.setProperty('background-color', colorPicker[note.colorIndex].header, 'important');
+          cardBody.style.setProperty('background-color', colorPicker[note.colorIndex].body, 'important');
+        }
+        else {
+          cardHeader.style.setProperty('background-color', darkColorPicker[note.colorIndex].header, 'important');
+          cardBody.style.setProperty('background-color', darkColorPicker[note.colorIndex].body, 'important');
+        }
+      });
+      setNoteList(updatedNoteList);
+      console.log(resp.data);
+    }
+    catch (error) {
+      console.log(error.response.data);
+    }
   };
 
   //======COMPONENT=====//

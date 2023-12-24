@@ -23,7 +23,7 @@ function Login() {
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
-            const resp = await axios.post(url, { username: username, password: password }, { withCredentials: true });
+            const resp = await axios.post(url, { username: username, password: password}, { withCredentials: true });
             if (resp.status === 200) {
                 window.location.href = 'http://localhost:3000/dashboard';
             }
