@@ -39,8 +39,14 @@ button {
   overflow: auto;
 }
 
+.note-view-container {
+  overflow: auto;
+  height: 175vh;
+  margin-right: 2.5vh;
+}
+
+
 .card {
-  width: 18rem;
   margin: 1vh;
   position: relative;
   left: 6%;
@@ -50,28 +56,37 @@ button {
 .form-container {
   display: flex;
   flex-direction: row;
-  /* Change to row */
   align-items: center;
   justify-content: space-between;
-  /* Add this line */
   max-width: 600px;
-  /* Adjust the value based on your design */
   margin: 0 auto;
-  /* Center the form horizontally */
-  /* margin-bottom: 10vh; */
 }
 
 
 .input-container {
   display: flex;
   flex-direction: column;
-  /* Align input and textarea in a column */
 }
 
 .button-container {
   margin-left: 10px;
   position: relative;
   top: -3vh;
+}
+
+::-webkit-scrollbar {
+  position: relative;
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: #0B0B0B; /* color of the track */
+  border-radius: 10px; /* rounded corners of the track */
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #DFE0E1;
+  border-radius: 10px;
 }
 
 /*Imported CSS*/
@@ -142,28 +157,5 @@ input:checked + .slider:before {
 body{
   background-color: #faf8de !important;
 }
-
-/*Responsiveness BootStraps*/
-/*Responsiveness BootStraps*/
-/* .col-xl-2 {
-  border-right: 2px solid red;
-} */
-
-/* Style for the right column */
-/* .col-xl-10 {
-  border-left: 2px solid red;
-} */
-
-/* Optional: Style for the entire row */
-/* .row {
-  border-bottom: 2px solid red;
-} */
-
-/* Optional: Style for the container */
-/* .container-fluid {
-  border-top: 2px solid red;
-  border-bottom: 2px solid red;
-} */
-
 
 

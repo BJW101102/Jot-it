@@ -68,7 +68,7 @@ const Card = ({ note, i, darkMode, handleColorChange, handleFavoriteNote, handle
     return (
         <div key={i} className="card bg-light mb-3" style={{ width: "45vh", borderColor: darkMode ? "#121212" : "unset" }}>
             {/*====HEADER-TEXT====*/}
-            <div id={`card-header-${i}`} className="card-header" style={{ backgroundColor: darkMode ? darkColorPicker[note.colorIndex].header : colorPicker[note.colorIndex].header, borderColor: darkMode ? "#121212" : "unset" }}>
+            <div id={`card-header-${i}`} className="card-header" style={{ backgroundColor: darkMode ? darkColorPicker[note.colorIndex].header : colorPicker[note.colorIndex].header, borderColor: darkMode ? "#121212" : "unset" , color: darkMode ? "white" : "black"}}>
                 {editMode ? (
                     <div className="Edit-Header" >
                         <button

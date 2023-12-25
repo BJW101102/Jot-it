@@ -338,16 +338,16 @@ function Dashboard() {
   return (
     <div className='container-fluid'>
       <div className='row'>
-      <NavBar 
-      username={userData && userData.username}
-      noteList={noteList}
-      darkMode={darkMode}
-      handleDarkMode={handleDarkMode}/>
+        <NavBar
+          username={userData && userData.username}
+          noteList={noteList}
+          darkMode={darkMode}
+          handleDarkMode={handleDarkMode} />
       </div>
       <div className='row'>
 
         <div className='col-xl-3' style={{ backgroundColor: darkMode ? "#1a1b1a" : "#8D7B6B", overflow: 'auto', padding: '10px' }}>
-          <SideView darkMode={darkMode} noteList={noteList}/>
+          <SideView darkMode={darkMode} noteList={noteList} />
         </div>
         <div className='col-xl-9'>
           <div className="Dashboard">
@@ -364,19 +364,22 @@ function Dashboard() {
               <p>Loading...</p>
             ) : (
               //=====NOTE-DISPLAYER=====//
+
               noteList.length === 0 ? (<h1>Insert a Note</h1>) : (
-                <div className="note-container">
-                  {noteList.map((note, i) => (
-                    <Card
-                      key={i}
-                      note={note}
-                      i={i}
-                      darkMode={darkMode}
-                      handleColorChange={handleColorChange}
-                      handleFavoriteNote={handleFavoriteNote}
-                      handleDelete={handleDelete}
-                    />
-                  ))}
+                <div className ='note-view-container'>
+                  <div className="note-container">
+                    {noteList.map((note, i) => (
+                      <Card
+                        key={i}
+                        note={note}
+                        i={i}
+                        darkMode={darkMode}
+                        handleColorChange={handleColorChange}
+                        handleFavoriteNote={handleFavoriteNote}
+                        handleDelete={handleDelete}
+                      />
+                    ))}
+                  </div>
                 </div>
               )
             )}

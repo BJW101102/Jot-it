@@ -1,5 +1,6 @@
 /* Header.css */
 .header-container {
+    margin-top: 13vh;
     position: relative;
     text-align: center;
 }
