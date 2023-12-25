@@ -1,0 +1,17 @@
+table {
+    background-color: #121212;
+    color: white;
+}
+
+.profile-picture {
+    margin-top: 5vh;
+    margin-left: 4vh;
+    width: 40vh;
+    height: 40vh;
+}
+
+/* .custom-table {
+    display: block;
+} */
+
+

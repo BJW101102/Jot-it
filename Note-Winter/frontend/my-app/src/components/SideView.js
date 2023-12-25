@@ -1,14 +1,39 @@
 import React from 'react';
 import placeholder from '../images/placeholder.jpg';
+import '../CSS/SideView.css'; // Import a separate CSS file
 
-const SideView = ({darkMode}) => {
+const SideView = ({ darkMode, noteList }) => {
     return (
         <div>
-        <img src={placeholder} alt="Download" style={{marginTop: '5vh', marginLeft: '4vh', width: '40vh', height: '40vh', border: darkMode ? "10px solid #2C2E2C" : "10px solid #5D432C" }} />
-        <div className="overflow-auto">...</div>
+            <div className='image-container'>
+                <img className='profile-picture' src={placeholder} alt="Download" style={{ border: darkMode ? "10px solid #2C2E2C" : "10px solid #5D432C" }} />
+            </div>
+            <br></br>
+            <table className="table table-striped custom-table" style={{ overflowY: "auto" }}>
+                <thead>
+                    <tr>
+                        <th style={{backgroundColor: darkMode ? "#121212" : "#FAF8DE", color: darkMode ? "white" : "black"}} scope="col">Note-Title</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
 
         </div>
     );
 };
 
 export default SideView;
+
+// {noteList.length === 0 ? (
+//     <tr>
+//         <td colSpan="2"><h1>No Notes, add some</h1></td>
+//     </tr>
+// ) : (
+//     noteList.map((note, i) => (
+//         <tr key={i}>
+//             <td scope="row">{note.header}</td>
+//             <td>{/* You can add favorite icon or other content here */}</td>
+//         </tr>
+//     ))
+// )} 

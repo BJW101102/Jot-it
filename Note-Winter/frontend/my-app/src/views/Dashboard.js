@@ -347,7 +347,7 @@ function Dashboard() {
       <div className='row'>
 
         <div className='col-xl-3' style={{ backgroundColor: darkMode ? "#1a1b1a" : "#8D7B6B", overflow: 'auto', padding: '10px' }}>
-          <SideView darkMode={darkMode}/>
+          <SideView darkMode={darkMode} noteList={noteList}/>
         </div>
         <div className='col-xl-9'>
           <div className="Dashboard">
