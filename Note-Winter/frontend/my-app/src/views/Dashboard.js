@@ -5,15 +5,14 @@ import React, { useState, useEffect } from 'react';
 import Header from '../components/Header';
 import Card from '../components/NoteCard';
 import NoteForm from '../components/NoteForm';
+import NavBar from '../components/NavBar';
 import axios from 'axios';
-
-
+import SideView from '../components/SideView';
 
 const api = axios.create({
   baseURL: 'http://localhost:5500/api/',
   withCredentials: true,
 });
-
 
 function Dashboard() {
 
@@ -113,9 +112,6 @@ function Dashboard() {
     fetchUserNotes();
   }, []);
 
-
-
-
   //=======HANDLERS-NOTE/THEME=========//
   const handleNoteChange = (event) => {
     setNote(() => event.target.value);
@@ -156,6 +152,7 @@ function Dashboard() {
     var darkModeRequest = false;
 
     if (!darkMode) {
+      document.body.style.setProperty('background-color', "#121212", "important");
       cardHeader.forEach((headerElement) => {
         headerElement.style.setProperty('border-color', "#121212", "important");
         headerElement.style.setProperty('color', "white", "important");
@@ -182,6 +179,7 @@ function Dashboard() {
       darkModeRequest = true;
     }
     else {
+      document.body.style.setProperty('background-color', "#faf8de", "important");
       cardHeader.forEach((headerElement) => {
         headerElement.style.removeProperty('border-color');
         headerElement.style.removeProperty('color');
@@ -338,53 +336,52 @@ function Dashboard() {
 
   //======COMPONENT=====//
   return (
-    <div className='fluid-container'>
-      <nav style={{ backgroundColor: darkMode ? "#595D59" : "#5D432C", display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 20px' }}>
-        <div style={{ color: "white", display: 'flex', alignItems: 'center' }}>
-          <span style={{ marginLeft: '2vh' }}>User: {userData.username}</span>
-          <span style={{ marginLeft: '2vh', marginRight: '2vh' }}>Total Notes: {noteList.length}</span>
-          <span style={{ marginRight: '2vh' }}>Favorited Notes: {noteList.filter(note => note.isFavorite).length}</span>
-        </div>
-        <div style={{ display: 'flex', alignItems: 'center' }}>
-          <label className="switch" style={{ marginRight: '1rem' }}>
-            <input onChange={handleDarkMode} type="checkbox" checked={darkMode} />
-            <span className="slider round"></span>
-          </label>
-          <button style={{ color: 'white', height: '10vh' }}>Sign Out</button>
-        </div>
-      </nav>
-      <div className="Dashboard">
-        <Header username={userData && userData.username} darkMode={handleDarkMode} />
-        <NoteForm
-          header={header}
-          note={note}
-          handleHeaderChange={handleHeaderChange}
-          handleNoteChange={handleNoteChange}
-          handleClick={handleClick}
-          darkMode={darkMode}
-        />
+    <div className='container-fluid'>
+      <div className='row'>
+      <NavBar 
+      username={userData && userData.username}
+      noteList={noteList}
+      darkMode={darkMode}
+      handleDarkMode={handleDarkMode}/>
+      </div>
+      <div className='row'>
 
-        {loading ? (
-          <p>Loading...</p>
-
-        ) : (
-          //=====NOTE-DISPLAYER=====//
-          noteList.length === 0 ? (<h1>Insert a Note</h1>) : (
-            <div className="note-container">
-              {noteList.map((note, i) => (
-                <Card
-                  key={i}
-                  note={note}
-                  i={i}
-                  darkMode={darkMode}
-                  handleColorChange={handleColorChange}
-                  handleFavoriteNote={handleFavoriteNote}
-                  handleDelete={handleDelete}
-                />
-              ))}
-            </div>
-          )
-        )}
+        <div className='col-xl-3' style={{ backgroundColor: darkMode ? "#1a1b1a" : "#8D7B6B", overflow: 'auto', padding: '10px' }}>
+          <SideView darkMode={darkMode}/>
+        </div>
+        <div className='col-xl-9'>
+          <div className="Dashboard">
+            <Header username={userData && userData.username} darkMode={handleDarkMode} />
+            <NoteForm
+              header={header}
+              note={note}
+              handleHeaderChange={handleHeaderChange}
+              handleNoteChange={handleNoteChange}
+              handleClick={handleClick}
+              darkMode={darkMode}
+            />
+            {loading ? (
+              <p>Loading...</p>
+            ) : (
+              //=====NOTE-DISPLAYER=====//
+              noteList.length === 0 ? (<h1>Insert a Note</h1>) : (
+                <div className="note-container">
+                  {noteList.map((note, i) => (
+                    <Card
+                      key={i}
+                      note={note}
+                      i={i}
+                      darkMode={darkMode}
+                      handleColorChange={handleColorChange}
+                      handleFavoriteNote={handleFavoriteNote}
+                      handleDelete={handleDelete}
+                    />
+                  ))}
+                </div>
+              )
+            )}
+          </div>
+        </div>
       </div>
     </div>
   );

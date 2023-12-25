@@ -33,8 +33,8 @@ const darkColorPicker = [
     { header: "#a82424d3", body: "#a32626" }, //Red
     { header: " #a14e80d3", body: " #a95082" }, //Pink  
     { header: "#e38109d3", body: "#e39842" }, //Orange
-    { header: "#607d29d3", body: "#6a7f2b" }, //Green
-    { header: "#293b7dd3", body: "#1c397b" }, //Blue  
+    { header: "#6a7f2b", body: "#607d29d3" }, //Green "#6a7f2b" "#607d29d3"
+    { header: "#1c397b", body: "#293b7dd3" }, //Blue   "#1c397b" "#293b7dd3"
     { header: "#5b297dd3", body: "#51267bb9" }, //Purple 
 ];
 

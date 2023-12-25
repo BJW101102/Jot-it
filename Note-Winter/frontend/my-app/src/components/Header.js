@@ -10,8 +10,8 @@ const Header = ({ username, darkMode }) => {
     return (
         <div>
             <h1 className="header-container">
-                {darkMode ? (<img src={thumbtack} className="logo" alt="Thumbtack Logo" />) : (<div></div>)}
-                <span>Note Taker</span>
+                {/* {darkMode ? (<img src={thumbtack} className="logo" alt="Thumbtack Logo" />) : (<div></div>)} */}
+                <span>Jot-it!</span>
             </h1>
             {username && <p>Welcome, {username}!</p>}
             <div>

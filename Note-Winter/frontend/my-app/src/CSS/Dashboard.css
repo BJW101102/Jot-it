@@ -36,7 +36,7 @@ button {
 .note-container {
   display: flex;
   flex-wrap: wrap;
-
+  overflow: auto;
 }
 
 .card {
@@ -138,3 +138,32 @@ input:checked + .slider:before {
 .slider.round:before {
   border-radius: 50%;
 }
+
+body{
+  background-color: #faf8de !important;
+}
+
+/*Responsiveness BootStraps*/
+/*Responsiveness BootStraps*/
+/* .col-xl-2 {
+  border-right: 2px solid red;
+} */
+
+/* Style for the right column */
+/* .col-xl-10 {
+  border-left: 2px solid red;
+} */
+
+/* Optional: Style for the entire row */
+/* .row {
+  border-bottom: 2px solid red;
+} */
+
+/* Optional: Style for the container */
+/* .container-fluid {
+  border-top: 2px solid red;
+  border-bottom: 2px solid red;
+} */
+
+
+
