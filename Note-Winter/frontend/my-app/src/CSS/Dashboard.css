@@ -10,6 +10,10 @@
   /* color: white; */
 }
 
+body{
+  background-color: #faf8de !important;
+}
+
 .form-container {
   display: flex;
   flex-direction: column;
@@ -74,20 +78,6 @@ button {
   top: -3vh;
 }
 
-::-webkit-scrollbar {
-  position: relative;
-  width: 10px;
-}
-
-::-webkit-scrollbar-track {
-  background-color: #0B0B0B; /* color of the track */
-  border-radius: 10px; /* rounded corners of the track */
-}
-
-::-webkit-scrollbar-thumb {
-  background-color: #DFE0E1;
-  border-radius: 10px;
-}
 
 /*Imported CSS*/
 /*Imported Slider-CSS*/
@@ -154,8 +144,22 @@ input:checked + .slider:before {
   border-radius: 50%;
 }
 
-body{
-  background-color: #faf8de !important;
+::-webkit-scrollbar {
+  position: relative;
+  width: 10px;
+}
+/* 
+::-webkit-scrollbar-track {
+  background-color: #2C2E2C; 
+  border-radius: 10px; 
 }
 
+::-webkit-scrollbar-thumb {
+  background-color: #A5A6A6;
+  border-radius: 10px;
+}
 
+::-webkit-scrollbar-thumb:hover {
+  background-color: #6A6B6C
+  ; 
+} */

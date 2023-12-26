@@ -1,9 +1,9 @@
 /* Table styles */
-table {
+/* table {
     background-color: #121212;
     color: white;
     width: 100%;
-}
+} */
 
 th, td {
     border-bottom: 1px solid black;
@@ -36,3 +36,40 @@ tr:nth-child(odd) {
 
 /* Custom scrollbar styles for WebKit (Chrome, Safari) */
 
+
+/*
+::-webkit-scrollbar {
+  position: relative;
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: #0B0B0B; 
+  border-radius: 10px; 
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #DFE0E1;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #6A6B6C
+  ; 
+}
+
+body.dark-mode ::-webkit-scrollbar {
+  width: 10px;
+}
+
+body.dark-mode ::-webkit-scrollbar-track {
+  background-color: blue; 
+}
+
+body.dark-mode ::-webkit-scrollbar-thumb {
+  background-color: #4f5051; 
+}
+
+body.dark-mode ::-webkit-scrollbar-thumb:hover {
+  background-color: #6A6B6C; 
+}*/

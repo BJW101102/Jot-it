@@ -1,7 +1,7 @@
 import React from 'react';
 const NavBar = ({ username, darkMode, noteList, handleDarkMode }) => {
-    return (
-            <nav style={{ backgroundColor: darkMode ? "#2C2E2C" : "#5D432C", display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 20px' }}>
+    return ( /*#6D5541 5D432C*/
+            <nav style={{ backgroundColor: darkMode ? "#2C2E2C" : "#7D6856", display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 20px' }}>
                 <div style={{ color: "white", display: 'flex', alignItems: 'center' }}>
                     <span style={{ marginLeft: '2vh' }}>User: {username}</span>
                     <span style={{ marginLeft: '2vh', marginRight: '2vh' }}>Total Notes: {noteList.length}</span>

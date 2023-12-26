@@ -31,7 +31,7 @@ const colorPicker = [
 const darkColorPicker = [
     { header: "#373c38d3", body: "#393a36" },   //Gray
     { header: "#a82424d3", body: "#a32626" }, //Red
-    { header: " #a14e80d3", body: " #a95082" }, //Pink  
+    { header: "#a95082", body: " #a14e80d3" }, //Pink  #a95082
     { header: "#e38109d3", body: "#e39842" }, //Orange
     { header: "#6a7f2b", body: "#607d29d3" }, //Green "#6a7f2b" "#607d29d3"
     { header: "#1c397b", body: "#293b7dd3" }, //Blue   "#1c397b" "#293b7dd3"
@@ -57,10 +57,7 @@ const Card = ({ note, i, darkMode, handleColorChange, handleFavoriteNote, handle
         setEditedBody(event.target.value);
     };
 
-    const handleSave = (note) => {
-        // Call the handleEdit function to update the note with the edited header and body
-        // handleEdit(note, i, editedHeader, editedBody);
-        
+    const handleSave = (note) => {        
         note.header = editedHeader;
         note.body = editedBody;
         toggleEditMode();
@@ -125,7 +122,7 @@ const Card = ({ note, i, darkMode, handleColorChange, handleFavoriteNote, handle
                 {editMode ? (<div></div>) : (
                     <div className="Buttons" style={{ position: "relative", top: "-2vh" }}>
                         {/* ==== COLOR-BUTTON ==== */}
-                        <button style={{ marginRight: "1vh" }} onClick={() => handleColorChange(note, i)}>
+                        <button style={{ marginRight: "1vh" }} onClick={() => handleColorChange(colorPicker, note, i)}>
                             <img src={color} alt="Change-Color" style={{ width: '25px', height: '25px' }} />
                         </button>
 
@@ -139,7 +136,7 @@ const Card = ({ note, i, darkMode, handleColorChange, handleFavoriteNote, handle
                         </button>
 
                         {/* ==== DELETE-BUTTON ==== */}
-                        <button onClick={() => handleDelete(note)}>
+                        <button onClick={() => handleDelete(colorPicker, darkColorPicker, note)}>
                             <img src={eraser} alt="Download" style={{ width: '25px', height: '25px' }} />
                         </button>
                     </div>

@@ -9,10 +9,15 @@ import NavBar from '../components/NavBar';
 import axios from 'axios';
 import SideView from '../components/SideView';
 
+
+
 const api = axios.create({
   baseURL: 'http://localhost:5500/api/',
   withCredentials: true,
 });
+
+
+
 
 function Dashboard() {
 
@@ -23,94 +28,70 @@ function Dashboard() {
   const [loading, setLoading] = useState(true);
   const [darkMode, setDarkMode] = useState(false);
 
-  const colorPicker = [
-    { header: "#f1f2f3", body: "#f8f9fa" },   //Gray
-    { header: "#f6a0a1", body: "#fea7a7bc" }, //Red
-    { header: "#f7bbf9", body: "#ffc2ffbc" }, //Pink  
-    { header: "#f6d4a1", body: "#fedba7bc" }, //Orange
-    { header: "#b2f7a1", body: "#bafea7bc" }, //Green
-    { header: "#bce9f9", body: "#c4f0ffbc" }, //Blue  
-    { header: "#bda0f8", body: "#c5a7febc" }, //Purple
-  ];
-
-  const darkColorPicker = [
-    { header: "#373c38d3", body: "#393a36" },   //Gray
-    { header: "#a82424d3", body: "#a32626" }, //Red
-    { header: " #a14e80d3", body: " #a95082" }, //Pink  
-    { header: "#e38109d3", body: "#e39842" }, //Orange
-    { header: "#607d29d3", body: "#6a7f2b" }, //Green
-    { header: "#293b7dd3", body: "#1c397b" }, //Blue  
-    { header: "#5b297dd3", body: "#51267bb9" }, //Purple 
-  ];
 
   //=======FECTHES=========//
-  const fetchUserData = async () => {
-    try {
-      const resp = await api.get('user', { withCredentials: true });
-      console.log(resp.data.username);
-      setUserData(resp.data);
-      setDarkMode(resp.data.theme);
-      //Couldn't just call the method, very weird!
-      if (resp.data.theme === true) {
-        const cardHeader = document.querySelectorAll(".card-header");
-        const cardBody = document.querySelectorAll(".card-body");
-        const card = document.querySelectorAll(".card");
-        const dashboard = document.querySelectorAll(".Dashboard");
-        const cardtext = document.querySelectorAll("#note-text");
-        cardHeader.forEach((headerElement) => {
-          headerElement.style.setProperty('border-color', "#121212", "important");
-          headerElement.style.setProperty('color', "white", "important");
-        });
 
-        cardBody.forEach((bodyElement) => {
-          bodyElement.style.setProperty('border-color', "#121212", "important");
-        });
 
-        card.forEach((cardElement) => {
-          cardElement.style.setProperty('border-color', "#121212", "important");
-        });
 
-        dashboard.forEach((dashboardElement) => {
-          dashboardElement.style.setProperty('background-color', "#121212", "important");
-          dashboardElement.style.setProperty('color', "white", "important");
-        })
-
-        cardtext.forEach((textElement => {
-          textElement.style.setProperty('color', "white", "important");
-        }))
-
-        setDarkMode(true);
-      }
-      console.log("Theme is: ", resp.data.theme);
-    }
-    catch (error) {
-      console.error('Error fetching user data:', error);
-      console.log("No user");
-
-    }
-  };
-
-  const fetchUserNotes = async () => {
-    try {
-      const resp = await api.get('usernotes', { withCredentials: true });
-      console.log(resp);
-      const notesData = resp.data;
-      // Extract raw text from the 'header' property of each object
-      const extractedNotes = notesData.map(obj => ({ id: obj.id, header: obj.header, body: obj.body, colorIndex: obj.color, isFavorite: obj.isFavorite }
-      ));
-      console.log("Color Index: ", extractedNotes);
-      setNoteList(extractedNotes);
-      setLoading(false);
-    } catch (error) {
-      console.error('Error fetching user notes:', error);
-    }
-  };
 
   useEffect(() => {
     console.log("Called ");
-    fetchUserData();
+    const fetchUserNotes = async () => {
+      try {
+        const resp = await api.get('usernotes', { withCredentials: true });
+        console.log(resp);
+        const notesData = resp.data;
+        // Extract raw text from the 'header' property of each object
+        const extractedNotes = notesData.map(obj => ({ id: obj.id, header: obj.header, body: obj.body, colorIndex: obj.color, isFavorite: obj.isFavorite }
+        ));
+        console.log("Color Index: ", extractedNotes);
+        setNoteList(extractedNotes);
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching user notes:', error);
+      }
+    };
+    const fetchUserData = async () => {
+      const styleElement = document.createElement('style');
+      styleElement.innerHTML = `
+        ::-webkit-scrollbar-track {
+          background-color: ${darkMode ? '#2C2E2C' : '#958870'};
+          border-radius: 10px;
+        }
+    
+        ::-webkit-scrollbar-thumb {
+          background-color: ${darkMode ? '#A5A6A6' : '#4B3E33'};
+          border-radius: 10px;
+        }
+    
+        ::-webkit-scrollbar-thumb:hover {
+          background-color: ${darkMode ? '#6A6B6C' : '#251F19'};
+        }
+      `;
+    
+      document.head.appendChild(styleElement);
+      try {
+        const resp = await api.get('user', { withCredentials: true });
+        console.log(resp.data.username);
+        setUserData(resp.data);
+        setDarkMode(resp.data.theme);
+        //Couldn't just call the method, very weird!
+        if (resp.data.theme === true) {
+          handleDarkMode();
+        }
+        console.log("Theme is: ", resp.data.theme);
+      }
+      catch (error) {
+        console.error('Error fetching user data:', error);
+        console.log("No user");
+  
+      }
+    };
     fetchUserNotes();
+    fetchUserData();
+    // eslint-disable-next-line
   }, []);
+
 
   //=======HANDLERS-NOTE/THEME=========//
   const handleNoteChange = (event) => {
@@ -150,6 +131,11 @@ function Dashboard() {
     const dashboard = document.querySelectorAll(".Dashboard");
     const cardtext = document.querySelectorAll("#note-text");
     var darkModeRequest = false;
+
+
+    // Apply styles to customize the scrollbar
+
+    // For WebKit browsers (Chrome, Safari)
 
     if (!darkMode) {
       document.body.style.setProperty('background-color', "#121212", "important");
@@ -204,6 +190,26 @@ function Dashboard() {
       setDarkMode(false);
       darkModeRequest = false;
     }
+    const styleElement = document.createElement('style');
+
+    styleElement.innerHTML = `
+        ::-webkit-scrollbar-track {
+          background-color: ${!darkMode ? '#2C2E2C' : '#958870'};
+          border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+          background-color: ${!darkMode ? '#A5A6A6' : ' #4B3E33'};
+          border-radius: 10px;
+        }
+       
+        ::-webkit-scrollbar-thumb:hover {
+          background-color: ${!darkMode ? '#6A6B6C' : '#251F19'};
+        }
+      `;
+    
+      document.head.appendChild(styleElement);
+   
     try {
       const resp = await api.patch('theme', { theme: darkModeRequest }, { withCredentials: true });
       console.log(resp);
@@ -214,7 +220,7 @@ function Dashboard() {
   };
 
   //=======HANDLERS-CARD-BUTTONS=========//
-  const handleColorChange = async (note, i) => {
+  const handleColorChange = async (colorPicker, note, i) => {
 
     const updatedNotes = [...noteList];
     const noteToChange = updatedNotes.indexOf(note);
@@ -301,11 +307,13 @@ function Dashboard() {
         catch (error) {
           console.log(error);
         }
+        break;
+        default: console.log("Something Unexpected Happend");
     }
     setNoteList(updatedNotes);
   };
 
-  const handleDelete = async (noteToDelete) => {
+  const handleDelete = async (colorPicker, darkColorPicker, noteToDelete) => {
     console.log("Before Filter:  ", noteList);
     const updatedNoteList = noteList.filter((note) => note !== noteToDelete);
     console.log("After Filter: ", updatedNoteList);
@@ -346,7 +354,7 @@ function Dashboard() {
       </div>
       <div className='row'>
 
-        <div className='col-xl-3' style={{ backgroundColor: darkMode ? "#1a1b1a" : "#8D7B6B", overflow: 'auto', padding: '10px' }}>
+      <div className='col-xl-3' style={{ backgroundColor: darkMode ? "#1a1b1a" : "#BBAB8C", overflow: 'auto'}}>
           <SideView darkMode={darkMode} noteList={noteList} />
         </div>
         <div className='col-xl-9'>
@@ -364,9 +372,8 @@ function Dashboard() {
               <p>Loading...</p>
             ) : (
               //=====NOTE-DISPLAYER=====//
-
               noteList.length === 0 ? (<h1>Insert a Note</h1>) : (
-                <div className ='note-view-container'>
+                <div className='note-view-container'>
                   <div className="note-container">
                     {noteList.map((note, i) => (
                       <Card
