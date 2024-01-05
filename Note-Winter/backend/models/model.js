@@ -30,6 +30,9 @@ const User = new mongoose.Schema({
         required: true,
         type: Boolean
     },
+    profilePicture: {
+        type: String // Assuming the profile picture is stored as a URL or file path
+    },
     notes: {
         type: [Notes]
     }

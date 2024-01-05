@@ -4,6 +4,9 @@
 const express = require('express');
 const router = express.Router();
 const Model = require('../models/model');
+const { MongoClient, GridFSBucket } = require('mongodb');
+const multer = require('multer');
+
 const bcrypt = require('bcrypt');
 module.exports = router;
 
@@ -264,6 +267,7 @@ router.patch('/theme', async (req, res) => {
     await userInfo.save();
     return res.status(200).json({ message: 'Theme Saved' });
 });
+
 
 //========DELETE ROUTES========/
 

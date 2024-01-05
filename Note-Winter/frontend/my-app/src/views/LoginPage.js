@@ -5,6 +5,8 @@ import React, { useState } from "react";
 import '../CSS/Login.css';
 import axios from 'axios';
 import swal from 'sweetalert';
+import tape from '../images/tape.png';
+
 
 
 function Login() {
@@ -63,10 +65,11 @@ function Login() {
     };
 
     return (
-        <div className='fluid-container'>
-            <div className="Login" style={{ textAlign: "center" }}>
+        <div className='sticky-note-container'>
+        
+            <div className="Login">
                 <h1>Login</h1>
-                <form id="form-handler" style={{ width: "100vh", margin: "auto" }}>
+                <form id="form-handler">
                     <div className="form-group">
                         <label>Username</label>
                         <input
@@ -85,10 +88,9 @@ function Login() {
                             onChange={handlePassword}
                         />
                     </div>
-                    {/* <p>Username: {username}</p> <br></br> <p>Password: {password}</p> */}
-                    <br></br>
-                    <button id="login-button" type="submit" onClick={handleSubmit} style={{ marginRight: "5vh" }} className="btn btn-outline-success">Login</button>
-                    <button id="login-button" type="button" onClick={handleSignUp} style={{ marginRight: "5vh" }} className="btn btn-outline-success">Signup</button>
+                    <br />
+                    <button id="login-button" type="submit" onClick={handleSubmit} className="btn btn-outline-success">Login</button>
+                    <button id="login-button" type="button" onClick={handleSignUp} className="btn btn-outline-success">Signup</button>
                 </form>
             </div>
         </div>
@@ -96,3 +98,40 @@ function Login() {
 }
 
 export default Login;
+
+/*   <form>
+    <h1>Sign In</h1>
+    <input type="text" placeholder="Username">
+    <input type="password" placeholder="Password">
+    <button>Sign in</button>
+  </form>*/
+
+/*
+  <div className="Login" style={{ textAlign: "center" }}>
+              <h1>Login</h1>
+              <form id="form-handler" style={{ width: "100vh", margin: "auto" }}>
+                  <div className="form-group">
+                      <label>Username</label>
+                      <input
+                          type="username"
+                          className="form-control"
+                          placeholder="Enter username"
+                          value={username}
+                          onChange={handleUsername}
+                      />
+                      <label>Password</label>
+                      <input
+                          type="password"
+                          className="form-control"
+                          placeholder="Password"
+                          value={password}
+                          onChange={handlePassword}
+                      />
+                  </div>
+                  {/* <p>Username: {username}</p> <br></br> <p>Password: {password}</p> }
+                  <br></br>
+                  <button id="login-button" type="submit" onClick={handleSubmit} style={{ marginRight: "5vh" }} className="btn btn-outline-success">Login</button>
+                  <button id="login-button" type="button" onClick={handleSignUp} style={{ marginRight: "5vh" }} className="btn btn-outline-success">Signup</button>
+              </form>
+          </div>
+*/

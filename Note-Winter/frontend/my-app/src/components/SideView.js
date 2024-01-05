@@ -1,5 +1,5 @@
 import React from 'react';
-import placeholder from '../images/placeholder.jpg';
+import placeholder from '../images/placeholder.png';
 import '../CSS/SideView.css'; // Import a separate CSS file
 
 const SideView = ({ darkMode, noteList }) => {
@@ -12,11 +12,14 @@ const SideView = ({ darkMode, noteList }) => {
     const oddRowStyle = {
         backgroundColor: darkMode ? '#2C2E2C' : '#7D6856',
     };
-
     return (
         <div>
             <div className='image-container'>
-                <img className='profile-picture' src={placeholder} alt="Download" style={{ border: darkMode ? "10px solid #2C2E2C" : "10px solid #7D6856" }} />
+
+                <img className='profile-picture' src={placeholder} alt="Download" style={{ border: darkMode ? "10px solid #2C2E2C" : "10px solid #7D6856"}} />
+                <br></br>
+                <br></br>
+                <input class="form-control form-control-sm" id="formFileSm" type="file"/>
             </div>
             <br></br>
             <table className="custom-table" style={{ ...tableStyle, color: darkMode ? 'white' : 'black' }}>

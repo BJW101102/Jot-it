@@ -37,21 +37,16 @@ app.use(session({
     resave: false,
     saveUninitialized: true,
     cookie: {
-        secure: false, // Set to true in a production environment with HTTPS
+        secure: false, 
         httpOnly: true,
-        maxAge: 3600000, // 1 hour
+        maxAge: 3600000,
     },
 }));
 //END: Middleware
 
-
-
 // Use routes
 app.use('/api', routes);
-
-
 const PORT = 5500;
-
 app.listen(PORT, () => {
     console.log(`Server Started at ${PORT}`);
 });

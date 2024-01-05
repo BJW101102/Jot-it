@@ -9,15 +9,10 @@ import NavBar from '../components/NavBar';
 import axios from 'axios';
 import SideView from '../components/SideView';
 
-
-
 const api = axios.create({
   baseURL: 'http://localhost:5500/api/',
   withCredentials: true,
 });
-
-
-
 
 function Dashboard() {
 
@@ -30,10 +25,6 @@ function Dashboard() {
 
 
   //=======FECTHES=========//
-
-
-
-
   useEffect(() => {
     console.log("Called ");
     const fetchUserNotes = async () => {
@@ -91,7 +82,6 @@ function Dashboard() {
     fetchUserData();
     // eslint-disable-next-line
   }, []);
-
 
   //=======HANDLERS-NOTE/THEME=========//
   const handleNoteChange = (event) => {

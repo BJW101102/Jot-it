@@ -5,6 +5,7 @@
     width: 100%;
 } */
 
+
 th, td {
     border-bottom: 1px solid black;
     height: 7vh;
@@ -20,19 +21,24 @@ tr:nth-child(odd) {
     background-color: #2C2E2C;
 }
 
-/* Table container styles with custom scrollbar */
 .table-container {
     height: 175vh;
-    overflow-y: auto; /* Use 'auto' to show scrollbar only when needed */
+    overflow-y: auto; 
+    top: 0vh;
 }
 
-/* Profile picture styles */
 .profile-picture {
     margin-top: 5vh;
     margin-left: 4vh;
     width: 40vh;
     height: 40vh;
 }
+
+.profile-form{
+  height: 5vh;
+  margin-bottom: 0;
+}
+
 
 /* Custom scrollbar styles for WebKit (Chrome, Safari) */
 
