@@ -16,7 +16,7 @@ function SignUp() {
     const handleUsername = async (event) => {
         setUsername(event.target.value);
     };
-    
+
     const handlePassword = async (event) => {
         setPassword(event.target.value);
     };
@@ -25,7 +25,7 @@ function SignUp() {
         event.preventDefault();
         console.log("Clicked");
         try {
-            const resp = await axios.post(url, { username: username, password: password, theme: false}, { withCredentials: true });
+            const resp = await axios.post(url, { username: username, password: password, theme: false }, { withCredentials: true });
             if (resp.status === 200) {
 
                 swal("Awesome!", "Great to have you", "success").then(() => {
@@ -35,7 +35,7 @@ function SignUp() {
         }
         catch (error) {
             const status = error.response.status
-            if (status === 409){
+            if (status === 409) {
                 swal("Oops!", "User name has already been taken", "error");
                 setUsername('');
                 setPassword('');
@@ -52,36 +52,34 @@ function SignUp() {
     };
 
     return (
-        <div className="Login" style={{ textAlign: "center" }}>
-            <h1>SignUp</h1>
-            <form style={{ width: "100vh", margin: "auto" }}>
-                <div className="form-group">
-                    <label>Username</label>
-                    <input
-                        type="username"
-                        className="form-control"
-                        placeholder="Enter username"
-                        value={username}
-                        onChange={handleUsername}
-                    />
-                </div>
-                <div className="form-group">
-                    <label>Password</label>
-                    <input
-                        type="password"
-                        className="form-control"
-                        placeholder="Password"
-                        value={password}
-                        onChange={handlePassword}
-                    />
-                </div>
-                {/* <p>Username: {username}</p>
-                <br></br>
-                <p>Password: {password}</p>
-                <br></br> */}
-                <button id="login-button" type="submit" onClick={handleSubmit} style={{ marginRight: "5vh" }} className="btn btn-outline-success">Submit</button>
-                <button id="login-button" type="button" onClick={handleBackToLogin} style={{ marginRight: "5vh" }} className="btn btn-outline-success">Back to Login</button>                
-            </form>
+        <div className='sticky-note-container'>
+            <div className="Login">
+                <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
+                    <h1> New to Jot-it?</h1>
+                    <span> <p> Sign up below!</p></span>
+                </div>                <form id="form-handler">
+                    <div className="form-group">
+                        <label>Username</label>
+                        <input
+                            type="username"
+                            className="form-control"
+                            placeholder="Enter username"
+                            value={username}
+                            onChange={handleUsername}
+                        />
+                        <label>Password</label>
+                        <input
+                            type="password"
+                            className="form-control"
+                            placeholder="Password"
+                            value={password}
+                            onChange={handlePassword}
+                        />
+                    </div>
+                    <button id="login-button" type="submit" onClick={handleSubmit} className="btn btn-outline-success">Submit</button>
+                    <button id="login-button" type="button" onClick={handleBackToLogin} className="btn btn-outline-success">Back To Login</button>
+                </form>
+            </div>
         </div>
     );
 }

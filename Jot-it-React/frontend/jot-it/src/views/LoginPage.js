@@ -63,9 +63,11 @@ function Login() {
 
     return (
         <div className='sticky-note-container'>
-        
             <div className="Login">
-                <h1>Login</h1>
+                <div  style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center"}}>
+                    <h1>Welcome to, Jot-it!</h1>
+                    <span> <p> Current User? Login Below </p></span>
+                </div>
                 <form id="form-handler">
                     <div className="form-group">
                         <label>Username</label>
@@ -85,7 +87,6 @@ function Login() {
                             onChange={handlePassword}
                         />
                     </div>
-                    <br />
                     <button id="login-button" type="submit" onClick={handleSubmit} className="btn btn-outline-success">Login</button>
                     <button id="login-button" type="button" onClick={handleSignUp} className="btn btn-outline-success">Signup</button>
                 </form>
