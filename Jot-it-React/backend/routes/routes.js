@@ -73,6 +73,17 @@ router.post('/login', async (req, res) => {
     }
 });
 
+router.post('/logout', async (req, res) => {
+        req.session.destroy((err) => {
+            if (err) {
+                console.error('Error destroying session:', err);
+                res.status(500).send('Internal Server Error');
+            } else {
+                res.status(200).json({ message: "Session Destroyed" });
+            }
+        });
+});
+
 //Post route for adding Notes
 router.post('/notes', async (req, res) => {
     try {
@@ -109,6 +120,9 @@ router.post('/notes', async (req, res) => {
         res.status(400).json({ message: 'Internal server error', error: error.message });
     }
 });
+
+
+
 
 //========GET ROUTES========/
 
@@ -276,7 +290,7 @@ router.patch('/editnote', async (req, res) => {
             return res.status(401).json({ message: 'User not authenticated' });
         }
         // const favNoteIndex = userInfo.notes.findIndex(note => note.id === favNoteID);
-        const noteHeader = req.body.header;     
+        const noteHeader = req.body.header;
         const noteBody = req.body.body;
         console.log("Header is: ", noteHeader);
         console.log("Body is: ", noteBody);
@@ -285,7 +299,7 @@ router.patch('/editnote', async (req, res) => {
         userInfo.notes[noteEditedIndex].header = noteHeader;
         userInfo.notes[noteEditedIndex].body = noteBody;
         await userInfo.save();
-        return res.status(200).json({ message: "Note Edited and Saved"});
+        return res.status(200).json({ message: "Note Edited and Saved" });
     }
     catch (error) {
         res.status(500).json({ message: 'Internal server error', error: error.message });
