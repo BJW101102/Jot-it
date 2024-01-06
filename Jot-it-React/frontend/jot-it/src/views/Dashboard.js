@@ -9,6 +9,7 @@ import NavBar from '../components/NavBar';
 import axios from 'axios';
 import SideView from '../components/SideView';
 
+
 const api = axios.create({
   baseURL: 'http://localhost:5500/api/',
   withCredentials: true,
@@ -345,7 +346,7 @@ function Dashboard() {
       <div className='row'>
 
       <div className='col-xl-3' style={{ backgroundColor: darkMode ? "#1a1b1a" : "#BBAB8C", overflow: 'auto'}}>
-          <SideView darkMode={darkMode} noteList={noteList} />
+          <SideView darkMode={darkMode} noteList={noteList} username={userData && userData.username}/>
         </div>
         <div className='col-xl-9'>
           <div className="Dashboard">

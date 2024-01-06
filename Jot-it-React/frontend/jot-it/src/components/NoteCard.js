@@ -1,5 +1,6 @@
 //@author: Brandon Walton
 // Card.js
+import axios from 'axios';
 import React from 'react';
 import { useState } from 'react';
 import star from '../images/favorite-star.png';
@@ -15,6 +16,11 @@ import save from '../images/save-button.png';
 // import lightstar from '../images/light-favorite-star.png';
 // import lighteditpencil from '../images/light-edit-pencil.png';
 // import lightgoldstar from '../images/light-gold-star.png';
+
+const api = axios.create({
+    baseURL: 'http://localhost:5500/api/',
+    withCredentials: true,
+});
 
 
 
@@ -57,18 +63,26 @@ const Card = ({ note, i, darkMode, handleColorChange, handleFavoriteNote, handle
         setEditedBody(event.target.value);
     };
 
-    const handleSave = (note) => {        
+    const handleSave = async (note) => {
         note.header = editedHeader;
         note.body = editedBody;
+        try {
+            const resp = await api.patch('editnote', { header: editedHeader, body: editedBody, noteID: note.id }, { withCredentials: true });
+            console.log(resp);
+        }
+        catch (error) {
+            console.log(error.response.data);
+        }
         toggleEditMode();
     };
     return (
         <div key={i} className="card bg-light mb-3" style={{ width: "45vh", borderColor: darkMode ? "#121212" : "unset" }}>
             {/*====HEADER-TEXT====*/}
-            <div id={`card-header-${i}`} className="card-header" style={{ backgroundColor: darkMode ? darkColorPicker[note.colorIndex].header : colorPicker[note.colorIndex].header, borderColor: darkMode ? "#121212" : "unset" , color: darkMode ? "white" : "black"}}>
+            <div id={`card-header-${i}`} className="card-header" style={{ backgroundColor: darkMode ? darkColorPicker[note.colorIndex].header : colorPicker[note.colorIndex].header, borderColor: darkMode ? "#121212" : "unset", color: darkMode ? "white" : "black" }}>
                 {editMode ? (
                     <div className="Edit-Header" >
                         <button
+                            style={{ position: 'relative', left: '-3vh' }}
                             onClick={() => handleSave(note)}
                             type="button">
                             <img src={save} alt="Save" style={{ width: '25px', height: '25px' }} />
@@ -77,7 +91,7 @@ const Card = ({ note, i, darkMode, handleColorChange, handleFavoriteNote, handle
                             type="text"
                             value={editedHeader}
                             onChange={handleHeaderChange}
-                            style={{ backgroundColor: darkMode ? "#F8F9FA" : "white"}}
+                            style={{ backgroundColor: darkMode ? "#F8F9FA" : "white" }}
                         >
                         </input>
                     </div>
@@ -91,7 +105,7 @@ const Card = ({ note, i, darkMode, handleColorChange, handleFavoriteNote, handle
                         type="text"
                         value={editedBody}
                         onChange={handleBodyChange}
-                        style={{ width: "40vh", marginTop: "2vh", marginBottom: "2vh", backgroundColor: darkMode ? "#F8F9FA" : "white"}}
+                        style={{ width: "40vh", marginTop: "2vh", marginBottom: "2vh", backgroundColor: darkMode ? "#F8F9FA" : "white" }}
                     >
                     </textarea>
                 </div>

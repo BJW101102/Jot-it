@@ -22,7 +22,7 @@ tr:nth-child(odd) {
 }
 
 .table-container {
-    height: 175vh;
+    max-height: 175vh;
     overflow-y: auto; 
     top: 0vh;
 }

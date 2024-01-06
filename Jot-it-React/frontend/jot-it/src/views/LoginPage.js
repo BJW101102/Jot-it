@@ -5,9 +5,6 @@ import React, { useState } from "react";
 import '../CSS/Login.css';
 import axios from 'axios';
 import swal from 'sweetalert';
-import tape from '../images/tape.png';
-
-
 
 function Login() {
 

@@ -80,7 +80,6 @@ router.post('/notes', async (req, res) => {
         const user = req.session.user;
         // console.log(user);
         if (!user) {
-            console.log("No Sessions");
             return res.status(400).json({ message: 'Internal server error', error: error.message });
         }
 
@@ -167,17 +166,14 @@ router.get('/usernotes', async (req, res) => {
 router.patch('/changecolor', async (req, res) => {
     try {
         const user = req.session.user;
-        console.log("Session is: ", user);
+        // console.log("Session is: ", user);
         if (!user) {
-
-            console.log("No User");
             return res.status(100).json({ message: 'Internal server error', error: error.message });
         }
         // console.log("LETS GO");
 
         const userInfo = await Model.findById(user._id);
         if (!userInfo) {
-            console.log("LETS GO");
             return res.status(401).json({ message: 'User not found' });
         }
 
@@ -258,7 +254,7 @@ router.patch('/theme', async (req, res) => {
         return res.status(401).json({ message: 'User not authenticated' });
     }
     const userInfo = await Model.findById(user._id);
-    if (!userInfo){
+    if (!userInfo) {
         return res.status(401).json({ message: 'User not authenticated' });
     }
 
@@ -268,6 +264,33 @@ router.patch('/theme', async (req, res) => {
     return res.status(200).json({ message: 'Theme Saved' });
 });
 
+router.patch('/editnote', async (req, res) => {
+    try {
+        console.log("Here nigga");
+        const user = req.session.user;
+        if (!user) {
+            return res.status(401).json({ message: 'User not authenticated' });
+        }
+        const userInfo = await Model.findById(user._id);
+        if (!userInfo) {
+            return res.status(401).json({ message: 'User not authenticated' });
+        }
+        // const favNoteIndex = userInfo.notes.findIndex(note => note.id === favNoteID);
+        const noteHeader = req.body.header;     
+        const noteBody = req.body.body;
+        console.log("Header is: ", noteHeader);
+        console.log("Body is: ", noteBody);
+        const noteID = req.body.noteID;
+        const noteEditedIndex = userInfo.notes.findIndex(note => note.id === noteID);
+        userInfo.notes[noteEditedIndex].header = noteHeader;
+        userInfo.notes[noteEditedIndex].body = noteBody;
+        await userInfo.save();
+        return res.status(200).json({ message: "Note Edited and Saved"});
+    }
+    catch (error) {
+        res.status(500).json({ message: 'Internal server error', error: error.message });
+    }
+})
 
 //========DELETE ROUTES========/
 
@@ -288,7 +311,7 @@ router.delete('/deletenotes', async (req, res) => {
     try {
         const user = req.session.user;
         if (!user) {
-            console.log("No session");
+            // console.log("No session");
             return res.status(500).json({ message: 'Internal server error', error: error.message });
         }
         const userInfo = await Model.findById(user._id);

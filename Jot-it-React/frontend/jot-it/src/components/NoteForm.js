@@ -1,4 +1,3 @@
-//@author: Brandon Walton
 // NoteForm.js
 
 import React from 'react';
@@ -8,14 +7,14 @@ import lightpencil from '../images/light-pencil-button.png';
 const NoteForm = ({ header, note, handleHeaderChange, handleNoteChange, handleClick, darkMode }) => {
     return (
         <div className="form-container">
-                <div className="form-group">
+            <div className="form-group">
                 <input
                     value={header}
                     onChange={handleHeaderChange}
                     className="form-control"
                     type="text"
                     placeholder="Note Header"
-                    style={{ height: "5vh", width: "85vh", backgroundColor: darkMode ? "#F8F9FA" : "white" }}
+                    style={{ height: "5vh", width: "80vw", maxWidth: "600px", backgroundColor: darkMode ? "#F8F9FA" : "white" }}
                 />
                 <textarea
                     value={note}
@@ -23,13 +22,13 @@ const NoteForm = ({ header, note, handleHeaderChange, handleNoteChange, handleCl
                     className="form-control"
                     placeholder="Leave a note here"
                     id="floatingTextarea"
-                    style={{ height: "10vh", width: "85vh", backgroundColor: darkMode ? "#F8F9FA" : "white" }}
+                    style={{ height: "10vh", width: "80vw", maxWidth: "600px", backgroundColor: darkMode ? "#F8F9FA" : "white" }}
                 />
             </div>
 
             <div className="button-container">
                 <button onClick={handleClick}>
-                    <img src={darkMode ? lightpencil : pencil} alt="Download" style={{ width: '15vh', height: '15vh' }} />
+                    <img src={darkMode ? lightpencil : pencil} alt="Download" style={{ width: '25vh', height: '25vh', maxWidth: '70px', maxHeight: '70px' }} />
                 </button>
             </div>
         </div>

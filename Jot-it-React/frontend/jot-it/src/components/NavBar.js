@@ -1,6 +1,6 @@
 import React from 'react';
 const NavBar = ({ username, darkMode, noteList, handleDarkMode }) => {
-    return ( /*#6D5541 5D432C*/
+    return ( 
             <nav style={{ backgroundColor: darkMode ? "#2C2E2C" : "#7D6856", display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 20px' }}>
                 <div style={{ color: "white", display: 'flex', alignItems: 'center' }}>
                     <span style={{ marginLeft: '2vh' }}>User: {username}</span>
