@@ -280,7 +280,6 @@ router.patch('/theme', async (req, res) => {
 
 router.patch('/editnote', async (req, res) => {
     try {
-        console.log("Here nigga");
         const user = req.session.user;
         if (!user) {
             return res.status(401).json({ message: 'User not authenticated' });
